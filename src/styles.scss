@@ -1,1 +1,66 @@
-/* You can add global styles to this file, and also import other style files */
+@use './app/styles/tailwind-config.scss';
+
+html,
+body {
+  height: 100%;
+  background-color: var(--color-gray-light);
+}
+
+body {
+  margin: 0; 
+  font-family: var(--font-nunito);
+  color: var(--color-dark-gray);
+}
+
+@for $i from 1 through 6 {
+  h#{$i} {
+    color: var(--color-gray-dark);
+    font-size: var(--text-size-h#{$i});
+    font-weight: 900;
+    letter-spacing: -0.025rem;
+    line-height: 2.5rem;
+  }
+}
+
+p,
+input,
+select,
+select option:not([disabled]),
+textarea {
+  color: var(--color-gray-dark);
+  font-size: var(--text-size-body);
+}
+
+input,
+select,
+textarea {
+  @apply p-2 rounded-md bg-white border border-gray-strong;
+}
+
+span,
+label,
+dt {
+  color: var(--color-gray-dark);
+  font-size: var(--text-size-body-small);
+}
+
+small,
+dd {
+  color: var(--color-gray-dark);
+  font-size: var(--text-size-body-xsmall);
+}
+
+input::placeholder,
+textarea::placeholder,
+select::placeholder,
+select option[disabled] {
+  @apply text-gray-medium;
+}
+
+a:focus,
+input:focus,
+textarea:focus,
+select:focus,
+button:focus {
+  @apply focus:outline-none focus:border-2 focus:rounded-md focus:border-gray-strong;
+}

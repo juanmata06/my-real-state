@@ -1,3 +1,4 @@
+@use "tailwindcss";
 @use './app/styles/tailwind-config.scss';
 
 html,
@@ -7,14 +8,13 @@ body {
 }
 
 body {
-  margin: 0; 
-  font-family: var(--font-nunito);
+  margin: 0;
   color: var(--color-dark-gray);
+  font-family: "Inter", sans-serif;
 }
 
 @for $i from 1 through 6 {
   h#{$i} {
-    color: var(--color-gray-dark);
     font-size: var(--text-size-h#{$i});
     font-weight: 900;
     letter-spacing: -0.025rem;
@@ -27,14 +27,13 @@ input,
 select,
 select option:not([disabled]),
 textarea {
-  color: var(--color-gray-dark);
   font-size: var(--text-size-body);
 }
 
 input,
 select,
 textarea {
-  @apply p-2 rounded-md bg-white border border-gray-strong;
+  @apply p-2 rounded-lg bg-white border border-gray-strong;
 }
 
 span,
@@ -62,5 +61,5 @@ input:focus,
 textarea:focus,
 select:focus,
 button:focus {
-  @apply focus:outline-none focus:border-2 focus:rounded-md focus:border-gray-strong;
+  @apply focus:outline-none focus:rounded-lg focus:border-gray-strong;
 }

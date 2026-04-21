@@ -1,15 +1,22 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { TitleAndSearcherSection, ServicesAsCardsSection, HousesAsCardsSection } from '@features/landing';
-import { CardComponent } from '@shared/components';
+import { TitleAndSearcherSection, ServicesAsCardsSection, HousesAsCardsSection, ZillowPartnerSection, SellingOptionsSection } from '@features/landing';
 
 @Component({
   selector: 'app-landing-page',
-  imports: [TitleAndSearcherSection, ServicesAsCardsSection, HousesAsCardsSection],
-  template: ` 
+  imports: [
+    TitleAndSearcherSection,
+    ServicesAsCardsSection,
+    HousesAsCardsSection,
+    ZillowPartnerSection,
+    SellingOptionsSection
+],
+  template: `
     <app-title-and-searcher />
     <app-services-as-cards />
     <app-houses-as-cards />
+    <app-zillow-partner />
+    <app-selling-options />
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

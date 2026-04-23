@@ -8,7 +8,7 @@ body {
 
 body {
   margin: 0;
-  color: var(--color-dark-gray);
+  color: var(--color-black);
   font-family: "Inter", sans-serif;
 }
 
@@ -35,16 +35,20 @@ textarea {
   @apply p-2 rounded-lg bg-white border border-gray-strong;
 }
 
+a{
+  @apply underline font-bold;
+}
+
 span,
 label,
 dt {
-  color: var(--color-gray-dark);
+  color: var(--color-black);
   font-size: var(--text-size-body-small);
 }
 
 small,
 dd {
-  color: var(--color-gray-dark);
+  color: var(--color-black);
   font-size: var(--text-size-body-xsmall);
 }
 

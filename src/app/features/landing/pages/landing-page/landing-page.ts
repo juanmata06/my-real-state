@@ -14,9 +14,9 @@ import { TitleAndSearcherSection, ServicesAsCardsSection, HousesAsCardsSection, 
   template: `
     <app-title-and-searcher />
     <app-services-as-cards />
-    <app-houses-as-cards />
     <app-zillow-partner />
     <app-selling-options />
+    <app-houses-as-cards />
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

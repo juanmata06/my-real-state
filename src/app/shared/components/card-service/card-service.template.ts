@@ -6,7 +6,7 @@ import { CustomButton } from '../custom-button/custom-button';
   selector: 'app-card-service-template',
   imports: [CardComponent, CustomButton],
   template: `
-    <app-card isShadow>
+    <app-card isShadowXl>
       <div class="flex flex-col items-center">
         <img
           src="assets/edificio.png"

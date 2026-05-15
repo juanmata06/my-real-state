@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  input,
+  output,
+} from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 @Component({
   selector: 'app-custom-button',
@@ -12,6 +17,7 @@ import { ButtonModule } from 'primeng/button';
       [class.bg-transparent]="isTransparent()"
       [class.text-white]="isPrimary() || (!isSecondary() && !isTransparent())"
       [class.text-primary]="isSecondary()"
+      (click)="emitButtonValue()"
     >
       <ng-content />
     </button>
@@ -28,4 +34,8 @@ export class CustomButton {
   public isTransparent = input(false, {
     transform: (value: boolean | string) => (typeof value == 'string' ? value == '' : value),
   });
+  public isButtonClicked = output<boolean>();
+  public emitButtonValue(): void {
+    this.isButtonClicked.emit(true);
+  }
 }

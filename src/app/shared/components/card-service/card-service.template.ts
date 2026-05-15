@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CardComponent } from '../card/card.component';
 import { CustomButton } from '../custom-button/custom-button';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-card-service-template',
@@ -18,14 +19,20 @@ import { CustomButton } from '../custom-button/custom-button';
         <div class="flex flex-col mb-6 items-center">
           <h3 class="font-bold">Buy a home</h3>
           <p class="leading-relaxed text-center">
-            A real estate agent can provide you with a clear breakdown of costs so that you
-            can avoid surprise expenses.
+            A real estate agent can provide you with a clear breakdown of costs so that you can
+            avoid surprise expenses.
           </p>
         </div>
-        <app-custom-button>Find details</app-custom-button>
+        <app-custom-button (isButtonClicked)="onButtonClicked()">Find details</app-custom-button>
       </div>
     </app-card>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CardServiceTemplate {}
+export class CardServiceTemplate {
+  private _router = inject(Router);
+  
+  onButtonClicked(): void {
+    this._router.navigate(['/search']);
+  }
+}

@@ -10,6 +10,10 @@ export const routes: Routes = [
         loadComponent: () => import('@features/landing/pages/landing-page/landing-page'),
       },
       {
+        path: 'search',
+        loadComponent: () => import('@features/searcher/pages/search-page/search-page'),
+      },
+      {
         path: '**',
         redirectTo: '',
       },

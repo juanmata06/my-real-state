@@ -1,8 +1,10 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { NgOptimizedImage } from '@angular/common';
+import { Router } from '@angular/router';
+import { CustomButton } from "@shared/components";
 @Component({
   selector: 'app-title-and-searcher',
-  imports: [NgOptimizedImage],
+  imports: [NgOptimizedImage, CustomButton],
   template: `
     <section class="relative h-[408px] w-full overflow-hidden">
       <img
@@ -18,6 +20,7 @@ import { NgOptimizedImage } from '@angular/common';
         <div class="flex-col w-full md:w-1/2">
           <h1 class="font-bold text-white">My Real State</h1>
           <h2 class="font-bold text-white">Your dream home is just a click away.</h2>
+          <app-custom-button isSecondary (isButtonClicked)="onButtonClicked()">Find details</app-custom-button>
         </div>
       </div>
     </section>
@@ -25,4 +28,10 @@ import { NgOptimizedImage } from '@angular/common';
   styleUrls: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TitleAndSearcherSection {}
+export class TitleAndSearcherSection {
+  private _router = inject(Router);
+
+  onButtonClicked(): void {
+    this._router.navigate(['/search']);
+  }
+}

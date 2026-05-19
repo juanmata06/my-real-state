@@ -4,3 +4,4 @@ export * from './card/card.component';
 export * from './card-house/card-house.template';
 export * from './card-service/card-service.template';
 export * from './card-banner-sides/card-banner-sides.template';
+export * from './search-input/search-input';

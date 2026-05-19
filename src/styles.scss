@@ -64,5 +64,5 @@ input:focus,
 textarea:focus,
 select:focus,
 button:focus {
-  @apply focus:outline-none focus:rounded-lg focus:border-gray-strong;
+  @apply focus:border-gray-strong;
 }

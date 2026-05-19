@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { NgOptimizedImage } from '@angular/common';
 import { Router } from '@angular/router';
-import { CustomButton } from "@shared/components";
+import { SearchInput } from "@shared/components";
 @Component({
   selector: 'app-title-and-searcher',
-  imports: [NgOptimizedImage, CustomButton],
+  imports: [NgOptimizedImage, SearchInput],
   template: `
     <section class="relative h-[408px] w-full overflow-hidden">
       <img
@@ -20,7 +20,7 @@ import { CustomButton } from "@shared/components";
         <div class="flex-col w-full md:w-1/2">
           <h1 class="font-bold text-white">My Real State</h1>
           <h2 class="font-bold text-white">Your dream home is just a click away.</h2>
-          <app-custom-button isSecondary (isButtonClicked)="onButtonClicked()">Find details</app-custom-button>
+          <app-search-input class="!mt-5 block" (searchSubmitted)="onSearch($event)" />
         </div>
       </div>
     </section>
@@ -31,7 +31,14 @@ import { CustomButton } from "@shared/components";
 export class TitleAndSearcherSection {
   private _router = inject(Router);
 
-  onButtonClicked(): void {
-    this._router.navigate(['/search']);
+  onSearch(searchValue: string): void {
+    const normalizedValue = searchValue.trim();
+
+    if (!normalizedValue) {
+      this._router.navigate(['/search']);
+      return;
+    }
+
+    this._router.navigate(['/search'], { queryParams: { q: normalizedValue } });
   }
 }

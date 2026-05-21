@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  input,
-  output,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 @Component({
   selector: 'app-custom-button',
@@ -11,10 +6,13 @@ import { ButtonModule } from 'primeng/button';
   template: `
     <button
       pButton
-      class="px-3 py-1 font-bold border-0 rounded-lg cursor-pointer hover:opacity-90"
+      class="px-3 py-1 font-bold border-1 rounded-lg cursor-pointer hover:opacity-90"
       [class.bg-primary]="isPrimary() || (!isSecondary() && !isTransparent())"
       [class.bg-secondary]="isSecondary()"
       [class.bg-transparent]="isTransparent()"
+      [class.border-primary]="isPrimary() || (!isSecondary() && !isTransparent())"
+      [class.border-black]="isSecondary()"
+      [class.border-transparent]="isTransparent()"
       [class.text-white]="isPrimary() || (!isSecondary() && !isTransparent())"
       [class.text-primary]="isSecondary()"
       (click)="emitButtonValue()"

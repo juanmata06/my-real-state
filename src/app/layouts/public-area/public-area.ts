@@ -3,9 +3,9 @@ import { CustomHeader } from "@shared/components";
 import { RouterOutlet } from "@angular/router";
 
 @Component({
-  selector: 'app-landing-area',
+  selector: 'app-public-area',
   imports: [CustomHeader, RouterOutlet],
-  templateUrl: './landing-area.html',
+  templateUrl: './public-area.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export default class LandingArea { }
+export default class PublicArea { }

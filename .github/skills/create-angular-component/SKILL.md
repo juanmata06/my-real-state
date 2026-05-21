@@ -1,6 +1,6 @@
 ---
 name: create-angular-component
-description: 'Create new Angular standalone components following project patterns. Use when: creating new components, pages, sections, or templates in the Angular real estate app.'
+description: 'ALWAYS USE for any Angular component creation task in this project. Triggers: "create a component", "crea un componente", "convert to shared component", "conviértelo a un shared component", "crea un shared component", "siguiendo este diseño", "make this a component", "add a new page", "add a section", "crea una sección", "crea una página", "nuevo componente", "new template". Covers: templates (.template.ts), pages (.ts), sections (.section.ts), shared components. Includes file naming, barrel exports, spec file creation, and composition patterns.'
 argument-hint: 'Component name and type (e.g., "search-filter template" or "dashboard page")'
 ---
 
@@ -30,8 +30,8 @@ The component type determines the file naming convention:
   - **When to create**: When you need a reusable variant of an existing shared component (e.g., a specialized button based on `CustomButton`, or a new card layout using `CardComponent`)
   - **Export**: Use named export (`export class`)
   
-- **Page** (`.page.ts`): Page-level components for routes
-  - Example: `dashboard.page.ts` → `export default class DashboardPage`
+- **Page** (`.ts`): Page-level components for routes
+  - Example: `dashboard-page.ts` → `export default class DashboardPage`
   - Use when: Creating routable page components
   - Export: Use default export (`export default class`)
   
@@ -160,7 +160,7 @@ export * from './component-name/component-name.template';
 
 **For Pages (default exports):**
 ```typescript
-export { default as ComponentName } from './component-name/component-name.page';
+export { default as ComponentName } from './component-name/component-name';
 ```
 
 **For Sections (named exports):**
@@ -183,7 +183,7 @@ feature-name/
 ├── pages/
 │   ├── index.ts
 │   └── page-name/
-│       ├── page-name.page.ts         # Default export
+│       ├── page-name.ts              # Default export (no .page.ts suffix)
 │       └── page-name.spec.ts
 └── sections/
     ├── index.ts
@@ -243,12 +243,12 @@ export * from './filter-button/filter-button.template';
 ### Creating a Page Component
 
 ```typescript
-// features/properties/pages/listings/listings.page.ts
+// features/properties/pages/listings/listings-page.ts
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { CardHouseTemplate } from '@shared/components';
 
 @Component({
-  selector: 'app-listings',
+  selector: 'app-listings-page',
   imports: [CardHouseTemplate],
   template: `
     <div class="container mx-auto p-4">
@@ -269,7 +269,7 @@ export default class ListingsPage {
 
 Update `features/properties/pages/index.ts`:
 ```typescript
-export { default as ListingsPage } from './listings/listings.page';
+export { default as ListingsPage } from './listings/listings-page';
 ```
 
 ### Creating a Section Component
@@ -310,7 +310,7 @@ export * from './featured-properties/featured-properties.section';
 - [ ] **For Templates**: Composes a base component (CardComponent, CustomButton, etc.)
 - [ ] Reused shared components where applicable
 - [ ] Imports use path aliases and barrel files
-- [ ] Spec file created with basic `should create` test
+- [ ] **Important** Spec file created with basic `should create` test
 - [ ] Barrel export (`index.ts`) updated
 - [ ] Selector follows `app-` prefix convention
 - [ ] Template uses Tailwind utility classes (no component styles)

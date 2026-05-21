@@ -1,39 +1,20 @@
 import { ChangeDetectionStrategy, Component, input, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faHeart, faPhone } from '@fortawesome/free-solid-svg-icons';
-import { GalleriaModule } from 'primeng/galleria';
 import { CardComponent } from '../card/card.component';
 import { CustomButton } from '../custom-button/custom-button';
+import { CustomImagesGallery, GalleryImage } from '../custom-images-gallery/custom-images-gallery';
 
 @Component({
   selector: 'app-card-house-template',
-  imports: [CardComponent, CustomButton, FaIconComponent, GalleriaModule],
+  imports: [CardComponent, CustomButton, FaIconComponent, CustomImagesGallery, RouterLink],
   template: `
-    <app-card>
+    <app-card class="cursor-pointer" routerLink="/search/1">
       <div class="@container">
         <div class="flex flex-col @md:flex-row">
           <div class="w-full h-48 flex-shrink-0 overflow-hidden @md:w-64 @md:h-auto">
-            <p-galleria
-              [value]="houseImages()"
-              [circular]="true"
-              [showItemNavigators]="true"
-              [showThumbnails]="false"
-              [containerStyle]="{ width: '100%', height: '100%' }"
-              [pt]="{
-                root: { class: 'border-0 rounded-none! h-full' },
-                content: { class: 'border-0 p-0 rounded-none! h-full' },
-                itemsContainer: { class: 'h-full' },
-                item: { class: 'h-full' },
-              }"
-            >
-              <ng-template #item let-item>
-                <img
-                  [src]="item.itemImageSrc"
-                  [alt]="item.alt"
-                  class="w-full h-48 object-cover @md:h-full block"
-                />
-              </ng-template>
-            </p-galleria>
+            <app-custom-images-gallery [value]="houseImages()" />
           </div>
           <div class="flex flex-col gap-y-2 p-3">
             <h3 class="font-bold">$450,000</h3>
@@ -67,28 +48,6 @@ import { CustomButton } from '../custom-button/custom-button';
     :host ::ng-deep app-card p-card .p-card-body {
       padding: 0;
     }
-    :host ::ng-deep p-galleria {
-      .p-galleria-nav-button {
-        top: 90%;
-      }
-      .p-galleria-prev-button,
-      .p-galleria-next-button {
-        background-color: rgba(255, 255, 255, 0.35);
-        // background-color: transparent;
-        svg {
-          color: var(--white);
-          width: 20px;
-          height: 20px;
-          filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.15))
-            drop-shadow(0 0px 3px rgba(0, 0, 0, 0.15));
-        }
-        &:hover {
-          // svg {
-          //   color: black;
-          // }
-        }
-      }
-    }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -102,7 +61,7 @@ export class CardHouseTemplate {
   squareMeters = input<number>();
   address = input<string>();
 
-  readonly houseImages = signal([
+  readonly houseImages = signal<GalleryImage[]>([
     {
       itemImageSrc:
         'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600&auto=format&fit=crop',

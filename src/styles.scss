@@ -66,10 +66,3 @@ select:focus,
 button:focus {
   @apply focus:border-gray-strong;
 }
-
-.text-container {
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 1;
-  -webkit-box-orient: vertical;
-}

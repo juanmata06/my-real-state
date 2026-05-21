@@ -101,71 +101,18 @@ import DashboardPage from '@features/dashboard/dashboard-page/dashboard-page';
 - Use only Tailwind utility classes in templates for responsive and maintainable styling.
 - Do not create component-level `.css` or `.scss` files. The only allowed style files are [src/styles.scss](src/styles.scss) and [src/app/styles/](src/app/styles/).
 
+#### Design Tokens & Global Element Styles
+
+- All CSS custom properties (colors, font sizes) are defined in [src/app/styles/tailwind-config.scss](src/app/styles/tailwind-config.scss). Always base color and typography decisions on the tokens declared there.
+- Global element resets and base styles (headings, form elements, links) are defined in [src/styles.scss](src/styles.scss). Always consult that file before overriding element styles in components.
+
 ## Shared Components Library
 
-The project has reusable components in `@shared/components`. Always use these instead of creating new ones:
+The project has reusable components in [src/app/shared/components/](src/app/shared/components/). **Always review them before creating new ones** to avoid duplication and stay consistent with established patterns.
 
-### CustomButton
-
-Configurable button component with three style variants:
-
-- **Selector**: `app-custom-button`
-- **Inputs**:
-  - `isPrimary()`: Primary button style (default)
-  - `isSecondary()`: Secondary button style
-  - `isTransparent()`: Transparent button style
-- **Outputs**:
-  - `isButtonClicked`: Emits on click
-- **Usage**: `<app-custom-button (isButtonClicked)="handler()">Text</app-custom-button>`
-
-### CustomHeader
-
-Navigation header component:
-
-- **Selector**: `app-custom-header`
-- **Usage**: `<app-custom-header />`
-- **Contains**: Navigation links and sign-in button
-
-### CardComponent
-
-Base container component with multiple variants:
-
-- **Selector**: `app-card`
-- **Inputs**:
-  - `isPrimary()`: Apply primary background color
-  - `isSecondary()`: Apply secondary background color
-  - `isTransparent()`: Transparent background
-  - `isNotBordered()`: Remove border
-  - `isShadowXl()`: Apply extra large shadow
-- **Usage**: `<app-card isShadowXl><content></app-card>`
-- **Note**: All boolean inputs accept both boolean and empty string values
-
-#### Card Template Components
-
-Higher-level components that compose `CardComponent` with domain-specific styling and structure. These components internally use `CardComponent` with pre-configured inputs, providing ready-to-use templates for common use cases. **Always prefer these over creating new card variations.**
-
-- **CardHouseTemplate**: Wraps `CardComponent` to display property/house information
-  - Pre-configured with appropriate card styling for real estate listings
-  - Selector: `app-card-house-template`
-  
-- **CardServiceTemplate**: Wraps `CardComponent` for real estate service displays (buy, sell, rent)
-  - Uses `CardComponent` with `isShadowXl` enabled
-  - Includes structured layout for service icon, title, and CTA button
-  - Selector: `app-card-service-template`
-  
-- **CardBannerSidesTemplate**: Wraps `CardComponent` for promotional banners with image placement
-  - Input: `imagePosition: 'left' | 'right'` - Controls image side positioning
-  - Uses named content projection: `<ng-content content>` and `<ng-content image>`
-  - Selector: `app-card-banner-sides-template`
-
-**Important**: When creating new domain-specific card layouts, follow this pattern by composing `CardComponent` rather than duplicating its functionality.
-
-### Component Guidelines
-
-- Always import from barrel files: `import { CardComponent, CustomButton } from '@shared/components'`
-- When adding new shared components, update [src/app/shared/components/index.ts](src/app/shared/components/index.ts)
-- Use boolean inputs with transform function for string-to-boolean conversion
-- Maintain backward compatibility when modifying existing components
+- Import exclusively from the barrel file: `import { ... } from '@shared/components'`
+- When adding a new shared component, export it from [src/app/shared/components/index.ts](src/app/shared/components/index.ts)
+- Read each component's source file to understand its API (inputs, outputs, content projection) before using it
 
 ## Business Domain
 

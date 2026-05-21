@@ -3,7 +3,7 @@ import { Routes } from '@angular/router';
 export const routes: Routes = [
   {
     path: '',
-    loadComponent: () => import('@layouts/landing-area/landing-area'),
+    loadComponent: () => import('@layouts/public-area/public-area'),
     children: [
       {
         path: '',
@@ -12,6 +12,10 @@ export const routes: Routes = [
       {
         path: 'search',
         loadComponent: () => import('@features/searcher/pages/search-page/search-page'),
+      },
+      {
+        path: 'search/:id',
+        loadComponent: () => import('@features/searcher/pages/house-detail-page/house-detail-page'),
       },
       {
         path: '**',

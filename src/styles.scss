@@ -9,7 +9,7 @@ body {
 body {
   margin: 0;
   color: var(--color-black);
-  font-family: "Inter", sans-serif;
+  font-family: 'Inter', sans-serif;
 }
 
 @for $i from 1 through 6 {
@@ -35,7 +35,7 @@ textarea {
   @apply p-2 rounded-lg bg-white border border-gray-strong;
 }
 
-a{
+a {
   @apply underline font-bold;
 }
 
@@ -56,7 +56,7 @@ input::placeholder,
 textarea::placeholder,
 select::placeholder,
 select option[disabled] {
-  @apply text-gray-medium;
+  @apply text-gray-strong;
 }
 
 a:focus,
@@ -65,4 +65,11 @@ textarea:focus,
 select:focus,
 button:focus {
   @apply focus:border-gray-strong;
+}
+
+.text-container {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
 }

@@ -7,3 +7,5 @@ export * from './card-banner-sides/card-banner-sides.template';
 export * from './card-agent/card-agent.template';
 export * from './search-input/search-input';
 export * from './custom-images-gallery/custom-images-gallery';
+export * from './ask-section/ask-section';
+export * from './modals/index';

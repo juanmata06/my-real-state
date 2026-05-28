@@ -1,9 +1,11 @@
 @use './app/styles/tailwind-config.scss';
+@use './app/styles/prime-ng-config.scss';
 
 html,
 body {
   height: 100%;
   background-color: var(--color-gray-light);
+  scrollbar-color: var(--color-gray-strong) transparent;
 }
 
 body {

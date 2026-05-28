@@ -4,7 +4,8 @@ import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faHeart, faPhone } from '@fortawesome/free-solid-svg-icons';
 import { CardComponent } from '../card/card.component';
 import { CustomButton } from '../custom-button/custom-button';
-import { CustomImagesGallery, GalleryImage } from '../custom-images-gallery/custom-images-gallery';
+import { CustomImagesGallery } from '../custom-images-gallery/custom-images-gallery';
+import { GalleryImage } from '@shared/models';
 
 @Component({
   selector: 'app-card-house-template',

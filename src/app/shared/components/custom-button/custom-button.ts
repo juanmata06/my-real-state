@@ -10,11 +10,11 @@ import { ButtonModule } from 'primeng/button';
       [class.bg-primary]="isPrimary() || (!isSecondary() && !isTransparent())"
       [class.bg-secondary]="isSecondary()"
       [class.bg-transparent]="isTransparent()"
-      [class.border-primary]="isPrimary() || (!isSecondary() && !isTransparent())"
-      [class.border-black]="isSecondary()"
+      [class.border-primary]="isPrimary() || isSecondary() || !isTransparent()"
       [class.border-transparent]="isTransparent()"
       [class.text-white]="isPrimary() || (!isSecondary() && !isTransparent())"
       [class.text-primary]="isSecondary()"
+      [class.rounded-full!]="isRounded()"
       (click)="emitButtonValue()"
     >
       <ng-content />
@@ -32,6 +32,10 @@ export class CustomButton {
   public isTransparent = input(false, {
     transform: (value: boolean | string) => (typeof value == 'string' ? value == '' : value),
   });
+  public isRounded = input(false, {
+    transform: (value: boolean | string) => (typeof value == 'string' ? value == '' : value),
+  });
+
   public isButtonClicked = output<boolean>();
   public emitButtonValue(): void {
     this.isButtonClicked.emit(true);

@@ -1,13 +1,4 @@
-export interface AgentInfo {
-  name: string;
-  title: string;
-  photoUrl: string;
-}
-
-export interface HouseInfo {
-  price: string;
-  currency?: string;
-  status?: string;
-  isFeatured?: boolean;
-  isReady?: boolean;
-}
+export * from './agent.interfaces';
+export * from './house.interfaces';
+export * from './modal.interfaces';
+export * from './images.interfaces';

@@ -1,10 +1,6 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { GalleriaModule } from 'primeng/galleria';
-
-export interface GalleryImage {
-  itemImageSrc: string;
-  alt: string;
-}
+import { GalleryImage } from '@shared/models';
 
 @Component({
   selector: 'app-custom-images-gallery',

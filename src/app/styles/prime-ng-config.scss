@@ -1,0 +1,8 @@
+.p-dialog-close-button{
+  background-color: transparent;
+  border: none ;
+  color: var(--color-gray-strong);
+  &:hover {
+    color: var(--color-black);
+  }
+}

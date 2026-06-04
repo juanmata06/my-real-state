@@ -1,5 +1,7 @@
 import {
   ApplicationConfig,
+  inject,
+  provideAppInitializer,
   provideBrowserGlobalErrorListeners,
   provideZonelessChangeDetection,
 } from '@angular/core';
@@ -7,9 +9,8 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { provideRouter } from '@angular/router';
 import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeuix/themes/aura';
-
 import { DialogService } from 'primeng/dynamicdialog';
-
+import { AuthStore } from '@shared/store';
 import { routes } from './app.routes';
 
 export const appConfig: ApplicationConfig = {
@@ -18,6 +19,10 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideZonelessChangeDetection(),
     provideAnimationsAsync(),
+    provideAppInitializer(async () => {
+      const authStore = inject(AuthStore);
+      await authStore.validateUserLogged();
+    }),
     providePrimeNG({
       theme: {
         preset: Aura,

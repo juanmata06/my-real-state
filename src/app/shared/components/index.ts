@@ -9,3 +9,5 @@ export * from './search-input/search-input';
 export * from './custom-images-gallery/custom-images-gallery';
 export * from './ask-section/ask-section';
 export * from './modals/index';
+export * from './login-form/login-form.component';
+export * from './register-form/register-form.component';

@@ -1,6 +1,28 @@
 import { Routes } from '@angular/router';
+import { noAuthGuard } from '@shared/guards';
 
 export const routes: Routes = [
+  {
+    path: 'auth',
+    canActivateChild: [noAuthGuard],
+    loadComponent: () => import('@layouts/auth-area/auth-area'),
+    children: [
+      {
+        path: 'login',
+        loadComponent: () => import('@features/auth/pages/login-page/login-page.component'),
+        title: 'Login',
+      },
+      {
+        path: 'register',
+        loadComponent: () => import('@features/auth/pages/register-page/register-page.component'),
+        title: 'Register',
+      },
+      {
+        path: '**',
+        redirectTo: 'login',
+      },
+    ],
+  },
   {
     path: '',
     loadComponent: () => import('@layouts/public-area/public-area'),
@@ -24,26 +46,6 @@ export const routes: Routes = [
     ],
   },
   //   {
-  //     path: 'auth',
-  //     loadComponent: () => import('@layouts/auth-area/auth-area'),
-  //     children: [
-  //       {
-  //         path: 'login',
-  //         loadComponent: () => import('@features/auth/pages/login-page/login-page'),
-  //         title: 'Login',
-  //       },
-  //       {
-  //         path: 'register',
-  //         loadComponent: () => import('@features/auth/pages/register-page/register-page'),
-  //         title: 'Register',
-  //       },
-  //       {
-  //         path: '**',
-  //         redirectTo: 'login',
-  //       },
-  //     ],
-  //   },
-  //   {
   //     path: 'private-area',
   //     canActivateChild: [authGuard],
   //     loadComponent: () => import('@layouts/private-area/private-area'),
@@ -59,5 +61,5 @@ export const routes: Routes = [
   //       },
   //     ],
   //   },
-  { path: '**', redirectTo: '' },
+  { path: '**', redirectTo: 'auth' },
 ];

@@ -34,7 +34,7 @@ textarea {
 input,
 select,
 textarea {
-  @apply p-2 rounded-lg bg-white border border-gray-strong;
+  @apply p-2 rounded-lg !bg-white border border-gray-strong;
 }
 
 a {

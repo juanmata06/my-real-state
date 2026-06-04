@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { CardComponent } from '../card/card.component';
 import { CustomButton } from '../custom-button/custom-button';
-import { AgentInfo, HouseInfo } from '@shared/models';
+import { AgentInfo, Property } from '@shared/models';
 
 @Component({
   selector: 'app-card-agent-template',
@@ -12,22 +12,22 @@ import { AgentInfo, HouseInfo } from '@shared/models';
         @if (houseInfo()) {
           <!-- Status Badges -->
           <div class="flex items-center gap-2 text-sm text-gray-600 mb-2">
-            @if (houseInfo()!.status) {
-              <span>{{ houseInfo()!.status }}</span>
+            @if (houseInfo()?.marketType) {
+              <span>{{ houseInfo().marketType }}</span>
             }
-            @if (houseInfo()!.isFeatured) {
+            <!-- @if (houseInfo()!.isFeatured) {
               <span>·</span>
               <span>Featured</span>
             }
             @if (houseInfo()!.isReady) {
               <span>·</span>
               <span>Ready</span>
-            }
+            } -->
           </div>
 
           <!-- Price -->
           <div class="text-2xl font-bold text-gray-900 mb-6">
-            {{ houseInfo()!.currency ?? '' }} {{ houseInfo()!.price }}
+            {{ houseInfo().price.currency }} {{ houseInfo().price.amount }}
           </div>
         }
 
@@ -78,5 +78,5 @@ import { AgentInfo, HouseInfo } from '@shared/models';
 })
 export class CardAgentTemplate {
   agentInfo = input.required<AgentInfo>();
-  houseInfo = input<HouseInfo>();
+  houseInfo = input<Property>();
 }

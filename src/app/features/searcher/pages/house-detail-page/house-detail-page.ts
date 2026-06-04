@@ -6,7 +6,7 @@ import {
   CustomButton,
 } from '@shared/components';
 import { ModalService } from '@shared/services';
-import { AgentInfo, GalleryImage, HouseInfo } from '@shared/models';
+import { AgentInfo, GalleryImage, Property } from '@shared/models';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faImage, faPlay } from '@fortawesome/free-solid-svg-icons';
 
@@ -260,12 +260,74 @@ export default class HouseDetailPage {
     photoUrl: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&q=80',
   });
 
-  readonly houseInfo = signal<HouseInfo>({
+  readonly houseInfo = signal<Property>({
+    id: 1,
     title: 'Jumeirah Islands Villa for Sale',
-    price: '28,000,000',
-    currency: 'AED',
-    status: 'For sale',
-    isFeatured: true,
-    isReady: true,
+    url: 'https://realstate.com/properties/jumeirah-islands-villa-001',
+    propertyType: 'Villa',
+    marketType: 'Sale',
+    price: { amount: 28000000, currency: 'EUR' },
+    location: {
+      community: 'Jumeirah Islands',
+      cluster: 'Cluster 29',
+      city: 'Dubai',
+      country: 'UAE',
+      zipCode: '00971',
+    },
+    details: {
+      bedrooms: 4,
+      bathrooms: 6,
+      builtUpAreaSqft: 5500,
+      plotAreaSqft: 12693,
+      vacantOnTransfer: true,
+    },
+    description:
+      'Engel and Voelkers is pleased to present this stunning 4-bedroom villa in Jumeirah Islands. Boasting one of the largest plots on the lake, this villa offers a generous built-up area of 5,500 sq. ft. on a 12,693 sq. ft. plot, complemented by breathtaking full lake views.',
+    features: [
+      'Built-in wardrobes',
+      'Gym',
+      'Jacuzzi',
+      'Lake views',
+      'Park views',
+      'Private gym',
+      'Private jacuzzi',
+      'Private sauna',
+      'Sauna',
+      'Sea views',
+      'Security',
+      'Skyline views',
+    ],
+    agent: {
+      id: 1,
+      name: 'Mohammed Fares',
+      firstName: 'Mohammed',
+      secondLastName: 'Fares',
+      email: 'mohammed.fares@engelvloelkers.com',
+      phone: '+971-50-123-4567',
+      birthDate: '1985-03-15',
+      profileImageUrl: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&q=80',
+      agency: 'Engel and Voelkers',
+      role: 'Private Office Advisor',
+      hireDate: '2018-06-10',
+      managerId: '5',
+      managerName: 'James Richardson',
+      managerFirstName: 'James',
+      managerSecondLastName: 'Richardson',
+      managerEmail: 'james.richardson@engelvloelkers.com',
+      managerPhone: '+971-50-987-6543',
+      linkedin: 'https://linkedin.com/in/mohammed-fares-luxury-real-estate',
+      location: {
+        city: 'Dubai',
+        state: 'Dubai',
+        country: 'UAE',
+        zipCode: '00971',
+      },
+      drivingLicense: true,
+      ownCar: true,
+      companyCar: true,
+    },
+    communityDescription:
+      'Jumeirah Islands is a exclusive development of 40 villas set on their own private islands in a scenic lagoon.',
+    listingTags: ['Featured', 'Luxury', 'Waterfront', 'LakeView', 'SmartHome'],
   });
 }

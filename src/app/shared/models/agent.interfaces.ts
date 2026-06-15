@@ -12,8 +12,8 @@ export interface AgentLocation {
   zipCode?: string;
 }
 
-// Firestore:
-export interface FirestoreAgent {
+// Supabase:
+export interface SupabaseAgent {
   id: number;
   name?: string;
   firstName?: string;

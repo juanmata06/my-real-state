@@ -1,4 +1,4 @@
-import { FirestoreAgent, Agent } from './agent.interfaces';
+import { SupabaseAgent, Agent } from './agent.interfaces';
 
 // Enums
 export enum PropertyType {
@@ -51,22 +51,13 @@ export enum MarketTags {
   EnergyEfficient = 15,
 }
 
-export interface HouseInfo {
-  title?: string;
-  price: string;
-  currency?: string;
-  status?: string;
-  isFeatured?: boolean;
-  isReady?: boolean;
-}
-
-// Firestore:
-export interface FirestorePrice {
+// Supabase:
+export interface SupabasePrice {
   amount?: number;
   currency?: string;
 }
 
-export interface FirestoreLocation {
+export interface SupabaseLocation {
   community?: string;
   cluster?: string;
   city?: string;
@@ -74,7 +65,7 @@ export interface FirestoreLocation {
   zip_code?: string;
 }
 
-export interface FirestoreDetails {
+export interface SupabaseDetails {
   bedrooms?: number;
   bathrooms?: number;
   built_up_area_sqft?: number;
@@ -82,18 +73,18 @@ export interface FirestoreDetails {
   vacant_on_transfer?: boolean;
 }
 
-export interface PropertyFromFirestore {
+export interface PropertyFromSupabase {
   id?: number;
   title?: string;
   url?: string;
   property_type?: number;
   market_type?: number;
-  price?: FirestorePrice;
-  location?: FirestoreLocation;
-  details?: FirestoreDetails;
+  price?: SupabasePrice;
+  location?: SupabaseLocation;
+  details?: SupabaseDetails;
   description?: string;
   features?: string[];
-  agent?: FirestoreAgent;
+  agent?: SupabaseAgent;
   community_description?: string;
   market_tags?: string[];
 }

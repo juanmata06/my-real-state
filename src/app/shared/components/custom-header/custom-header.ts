@@ -20,7 +20,7 @@ import { Router } from '@angular/router';
           <a href="#" class="text-black hover:opacity-80 transition">Get help</a>
         </div>
 
-        <app-custom-button (isButtonClicked)="onButtonClicked()">Sign in</app-custom-button>
+        <app-custom-button href="/auth/login">Sign in</app-custom-button>
       </nav>
     </header>
   `,
@@ -29,9 +29,7 @@ import { Router } from '@angular/router';
 export class CustomHeader {
   private _router = inject(Router);
 
-  onButtonClicked(): void {
-    console.log(123);
-    
+  onButtonClicked(): void {    
     this._router.navigate(['/auth/login']);
   }
 }

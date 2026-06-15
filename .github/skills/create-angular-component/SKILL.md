@@ -1,57 +1,97 @@
 ---
 name: create-angular-component
-description: 'ALWAYS USE for any Angular component creation task in this project. Triggers: "create a component", "crea un componente", "convert to shared component", "conviértelo a un shared component", "crea un shared component", "siguiendo este diseño", "make this a component", "add a new page", "add a section", "crea una sección", "crea una página", "nuevo componente", "new template". Covers: templates (.template.ts), pages (.ts), sections (.section.ts), shared components. Includes file naming, barrel exports, spec file creation, and composition patterns.'
-argument-hint: 'Component name and type (e.g., "search-filter template" or "dashboard page")'
+description: >
+  ALWAYS USE for any Angular component creation task in this project.
+  Triggers (EN): "create a component", "convert to shared component", "make this a component",
+  "add a new page", "add a section", "new template", "new component".
+  Triggers (ES): "crea un componente", "conviértelo a un shared component", "crea un shared component",
+  "siguiendo este diseño", "crea una sección", "crea una página", "nuevo componente", "nueva plantilla".
+  Covers: templates (.template.ts), pages (.ts), sections (.section.ts), shared components (.component.ts).
+  Includes file naming, barrel exports, spec file creation, composition patterns, and routing integration.
+argument-hint: 'Component name and type (e.g., "search-filter template", "dashboard page", "hero-banner section")'
 ---
 
 # Create Angular Component
 
-Creates a new Angular standalone component following project conventions and patterns.
+This skill scaffolds Angular standalone components following the conventions established in this project. It covers every component type (template, page, section, shared component, feature component) and ensures the result is consistent with the codebase in naming, exports, testing, and styling.
 
-## When to Use
+---
 
-- Creating new reusable components (templates)
-- Adding new pages to features
-- Creating section components for pages
-- Scaffolding components with proper naming and structure
+## Related Instruction Files
+
+Before generating code, **read and follow** the instruction files that apply to the task. Each file contains detailed rules the generated code must satisfy.
+
+| Instruction File | What It Covers | When to Read |
+| ---------------- | -------------- | ------------ |
+| `architecture.instructions.md` | Project folder structure (`layouts/`, `features/`, `shared/`), barrel file rules, SOLID principles, lazy loading, and testing requirements (≥ 80% coverage). | Always — to place the component in the correct folder and understand the overall architecture. |
+| `component-structure.instructions.md` | Component types and their file-name suffixes, export conventions (default vs named), `OnPush`, `input()`/`output()`, inline templates, no `ngClass`/`ngStyle`, reactive forms, and the component checklist. | Always — this is the primary reference for how every component must be built. |
+| `imports-and-path-aliases.instructions.md` | Barrel file (`index.ts`) conventions, path aliases (`@shared`, `@features`, `@layouts`), and import rules. | Always — to write correct imports and update barrel files. |
+| `shared-components.instructions.md` | Catalog of existing shared components (`CardComponent`, `CustomButton`, `CustomHeader`, card templates, forms, utility components) with their inputs/outputs. | When creating a template, or when the component might reuse an existing shared building block. |
+| `styling.instructions.md` | Tailwind CSS as default, design tokens via CSS custom properties, PrimeNG styling, no external `.scss`/`.css` files for components, `host` bindings. | When writing templates — to choose the right styling approach. |
+| `design-based-styling-components.instructions.md` | Rules for implementing components from a visual reference (image, Figma, screenshot). Prioritizes visual fidelity, responsive design, and defers logic. | When the user provides a design reference alongside the component request. |
+| `routing.instructions.md` | Route definitions, lazy loading with `loadComponent()`, guards (`authGuard`, `noAuthGuard`), page default exports, and route titles. | When creating a page that needs a new route. |
+| `state-management.instructions.md` | NgRx Signal Store conventions (`withState`, `withComputed`, `withMethods`, `withHooks`), when to create a store, and cleanup rules. | When the component needs shared or async state beyond simple local signals. |
+
+> **Rule**: If the task touches concerns covered by an instruction file, read it first and apply its rules. Do not guess conventions — the instruction files are the source of truth.
+
+---
+
+## When to Use This Skill
+
+- Creating any new component: template, page, section, shared, or feature-scoped.
+- Converting an existing piece of UI into a standalone component.
+- Scaffolding a component from a design reference.
+
+---
 
 ## Component Types & Naming
 
-The component type determines the file naming convention:
+The component type determines the file suffix, export style, and placement.
 
-- **Template** (`.template.ts`): Specialized components that compose or extend base shared components
-  - Example: `card-house.template.ts` → `export class CardHouseTemplate`
-  - **Purpose**: Create domain-specific variations of base components like `CardComponent` or `CustomButton`
-  - **Pattern**: Templates wrap base components with pre-configured styling and structure
-  - **Examples from codebase**:
-    - `CardHouseTemplate` - Wraps `CardComponent` for property displays
-    - `CardServiceTemplate` - Wraps `CardComponent` with `isShadowXl` for services
-    - `CardBannerSidesTemplate` - Wraps `CardComponent` for promotional banners
-  - **When to create**: When you need a reusable variant of an existing shared component (e.g., a specialized button based on `CustomButton`, or a new card layout using `CardComponent`)
-  - **Export**: Use named export (`export class`)
-  
-- **Page** (`.ts`): Page-level components for routes
-  - Example: `dashboard-page.ts` → `export default class DashboardPage`
-  - Use when: Creating routable page components
-  - Export: Use default export (`export default class`)
-  
-- **Section** (`.section.ts`): Section components within pages
-  - Example: `services-as-cards.section.ts` → `export class ServicesAsCardsSection`
-  - Use when: Breaking down page into logical sections
-  - Export: Use named export (`export class`)
+| Type | Suffix | Export | Placement | Purpose |
+| ---- | ------ | ------ | --------- | ------- |
+| **Template** | `.template.ts` | `export class` (named) | `shared/components/` or `features/[feat]/components/` | Presentational component that wraps a base shared component with domain-specific styling and structure. |
+| **Page** | `.ts` | `export default class` | `features/[feat]/pages/[page-name]/` | Route entry point. Composes sections and components. Lazy-loaded via `loadComponent()`. |
+| **Section** | `.section.ts` | `export class` (named) | `features/[feat]/sections/[section-name]/` | A visual block within a page (hero, card grid, CTA, etc.). |
+| **Shared Component** | `.component.ts` | `export class` (named) | `shared/components/[component-name]/` | Generic, reusable component used across multiple features. |
+| **Feature Component** | `.component.ts` | `export class` (named) | `features/[feat]/components/[component-name]/` | Component scoped to a single feature. Move to `shared/` if reuse is needed. |
+
+### Naming Examples
+
+| Type | File Name | Class Name |
+| ---- | --------- | ---------- |
+| Template | `card-house.template.ts` | `CardHouseTemplate` |
+| Page | `search-page.ts` | `SearchPage` |
+| Section | `houses-as-cards.section.ts` | `HousesAsCardsSection` |
+| Shared Component | `card.component.ts` | `CardComponent` |
+| Feature Component | `property-filter.component.ts` | `PropertyFilterComponent` |
+
+---
 
 ## Procedure
 
-### 1. Determine Component Details
+### Step 1 — Gather Requirements
 
-Ask the user or infer from context:
-- Component name (e.g., "property-filter", "listing", "hero-banner")
-- Component type (template, page, or section)
-- Target location (feature path, e.g., `features/searcher/components/`)
+Determine (ask the user if unclear):
 
-### 2. Create Component File
+1. **Name** — kebab-case identifier (e.g., `property-filter`, `hero-banner`).
+2. **Type** — template, page, section, shared component, or feature component.
+3. **Location** — target feature or `shared/components/`.
+4. **Design reference** — if provided, read `design-based-styling-components.instructions.md`.
 
-Create a single `.ts` file with proper naming:
+### Step 2 — Check for Reusable Components
+
+Before creating anything, verify whether an existing shared component can be reused or wrapped:
+
+- Review `shared-components.instructions.md` for the component catalog.
+- **Base components** available for composition: `CardComponent`, `CustomButton`, `CustomHeader`.
+- **Existing templates**: `CardHouseTemplate`, `CardServiceTemplate`, `CardBannerSidesTemplate`, `CardAgentTemplate`.
+
+If a shared component can solve the need, use it. If a template can be created by wrapping a base component, prefer that over a new standalone component.
+
+### Step 3 — Create the Component File
+
+Create a single `.ts` file inside the correct folder. All components must follow this base structure:
 
 ```typescript
 import { ChangeDetectionStrategy, Component } from '@angular/core';
@@ -61,39 +101,30 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   imports: [],
   template: `
     <div>
-      <!-- Component content -->
+      <!-- Content -->
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ComponentName {} // or: export default class ComponentName
+export class ComponentName {}
 ```
 
-**Critical patterns:**
-- Use `ChangeDetectionStrategy.OnPush` always
-- Prefer inline templates for simple components
-- Use `input()` and `output()` functions (not decorators)
-- Import from barrel files using path aliases (`@shared/components`, `@features/...`)
-- For Pages and Areas: use `export default class`
-- For Templates and Sections: use `export class`
+**Mandatory rules:**
+- `ChangeDetectionStrategy.OnPush` — always.
+- `input()` / `output()` functions — never `@Input()` / `@Output()` decorators.
+- `computed()` for derived state.
+- `inject()` instead of constructor injection.
+- Inline template — no external `.html` files.
+- No external `.scss` / `.css` files — use Tailwind classes or inline `styles` if needed.
+- No `ngClass` / `ngStyle` — use `[class.foo]`, `[class]`, or computed class strings.
+- `export default class` for pages and areas; `export class` for everything else.
 
-### 3. Identify Base Components for Composition
+### Step 4 — Compose Base Components (Templates Only)
 
-**For Templates**: Always compose existing base components from `@shared/components`:
+Templates must wrap a base shared component. Example pattern:
 
-**Base Components (compose these):**
-- `CardComponent` - Base card container with variants
-- `CustomButton` - Base button with style variants
-- `CustomHeader` - Navigation header
-
-**Existing Templates (examples of composition):**
-- `CardHouseTemplate` - Wraps `CardComponent` for property display
-- `CardServiceTemplate` - Wraps `CardComponent` for service display
-- `CardBannerSidesTemplate` - Wraps `CardComponent` for banners
-
-**Pattern for new templates:**
 ```typescript
-// Template wraps a base component
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { CardComponent } from '@shared/components';
 
 @Component({
@@ -101,28 +132,25 @@ import { CardComponent } from '@shared/components';
   imports: [CardComponent],
   template: `
     <app-card isShadowXl>
-      <!-- Domain-specific content -->
+      <h3 class="text-lg font-semibold">{{ title() }}</h3>
+      <p class="text-sm text-gray-500">{{ description() }}</p>
     </app-card>
   `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PropertyCardTemplate {}
+export class PropertyCardTemplate {
+  title = input.required<string>();
+  description = input<string>('');
+}
 ```
 
-**For Pages/Sections**: Use templates and base components as needed:
+### Step 5 — Create the Spec File
 
-```typescript
-import { CardHouseTemplate, CustomButton } from '@shared/components';
-```
-
-Import from barrel: `import { CardComponent, CustomButton } from '@shared/components'`
-
-### 4. Create Spec File
-
-Create a basic spec file `component-name.spec.ts` with only the `should create` test:
+Every component requires a colocated `.spec.ts` file with at least the `should create` test:
 
 ```typescript
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ComponentName } from './component-name';
+import { ComponentName } from './component-name.template';
 
 describe('ComponentName', () => {
   let component: ComponentName;
@@ -144,46 +172,55 @@ describe('ComponentName', () => {
 });
 ```
 
-**For default exports (Pages):**
+For **pages** (default exports), adjust the import:
+
 ```typescript
-import ComponentName from './component-name.page';
+import ComponentName from './component-name';
 ```
 
-### 5. Update Barrel Export
+### Step 6 — Update Barrel Exports
 
-Add export to the corresponding `index.ts` file:
+Add the component to the nearest `index.ts`:
 
-**For Templates (named exports):**
 ```typescript
+// Named exports (templates, sections, shared/feature components)
 export * from './component-name/component-name.template';
+export * from './section-name/section-name.section';
+
+// Default exports (pages)
+export { default as PageName } from './page-name/page-name';
 ```
 
-**For Pages (default exports):**
+### Step 7 — Add Route (Pages Only)
+
+If the new component is a page, add a route in the corresponding route file using lazy loading:
+
 ```typescript
-export { default as ComponentName } from './component-name/component-name';
+{
+  path: 'page-path',
+  title: 'Page Title',
+  loadComponent: () => import('@features/feature-name/pages/page-name/page-name'),
+}
 ```
 
-**For Sections (named exports):**
-```typescript
-export * from './component-name/component-name.section';
-```
+Refer to `routing.instructions.md` for guard configuration and layout integration.
 
-### 6. Verify Structure
+### Step 8 — Verify Final Structure
 
-Ensure the final structure follows conventions:
+Confirm the generated files match the expected folder layout:
 
 ```
 feature-name/
-├── index.ts                          # Updated with new export
+├── index.ts                            # Updated barrel
 ├── components/
-│   ├── index.ts                      # Updated if component goes here
+│   ├── index.ts
 │   └── component-name/
 │       ├── component-name.template.ts
 │       └── component-name.spec.ts
 ├── pages/
 │   ├── index.ts
 │   └── page-name/
-│       ├── page-name.ts              # Default export (no .page.ts suffix)
+│       ├── page-name.ts                # Default export
 │       └── page-name.spec.ts
 └── sections/
     ├── index.ts
@@ -192,11 +229,11 @@ feature-name/
         └── section-name.spec.ts
 ```
 
+---
+
 ## Examples
 
-### Creating a Template Component
-
-Template components compose base shared components. Here's an example of a template that specializes `CustomButton`:
+### Template — Wrapping `CustomButton`
 
 ```typescript
 // shared/components/filter-button/filter-button.template.ts
@@ -208,8 +245,8 @@ import { CustomButton } from '@shared/components';
   imports: [CustomButton],
   template: `
     <div class="relative">
-      <app-custom-button 
-        isSecondary 
+      <app-custom-button
+        isSecondary
         (isButtonClicked)="onFilterClicked()">
         {{ label() }}
         @if (count() > 0) {
@@ -226,24 +263,22 @@ export class FilterButtonTemplate {
   label = input.required<string>();
   count = input<number>(0);
   filterClicked = output<void>();
-  
+
   onFilterClicked(): void {
     this.filterClicked.emit();
   }
 }
 ```
 
-This template **wraps** `CustomButton` with a pre-configured style (`isSecondary`) and adds domain-specific features (filter count badge).
-
-Update `shared/components/index.ts`:
+Barrel update (`shared/components/index.ts`):
 ```typescript
 export * from './filter-button/filter-button.template';
 ```
 
-### Creating a Page Component
+### Page — Property Listings
 
 ```typescript
-// features/properties/pages/listings/listings-page.ts
+// features/properties/pages/listings-page/listings-page.ts
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { CardHouseTemplate } from '@shared/components';
 
@@ -252,8 +287,8 @@ import { CardHouseTemplate } from '@shared/components';
   imports: [CardHouseTemplate],
   template: `
     <div class="container mx-auto p-4">
-      <h1>Property Listings</h1>
-      <div class="grid grid-cols-3 gap-4">
+      <h1 class="text-h1 font-bold mb-6">Property Listings</h1>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         @for (house of houses; track house.id) {
           <app-card-house-template />
         }
@@ -263,16 +298,16 @@ import { CardHouseTemplate } from '@shared/components';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class ListingsPage {
-  houses = [];
+  houses: { id: number }[] = [];
 }
 ```
 
-Update `features/properties/pages/index.ts`:
+Barrel update (`features/properties/pages/index.ts`):
 ```typescript
-export { default as ListingsPage } from './listings/listings-page';
+export { default as ListingsPage } from './listings-page/listings-page';
 ```
 
-### Creating a Section Component
+### Section — Featured Properties
 
 ```typescript
 // features/landing/sections/featured-properties/featured-properties.section.ts
@@ -297,20 +332,30 @@ import { CardHouseTemplate } from '@shared/components';
 export class FeaturedPropertiesSection {}
 ```
 
-Update `features/landing/sections/index.ts`:
+Barrel update (`features/landing/sections/index.ts`):
 ```typescript
 export * from './featured-properties/featured-properties.section';
 ```
 
-## Checklist
+---
 
-- [ ] Component file created with correct naming (`.template.ts`, `.page.ts`, or `.section.ts`)
-- [ ] `ChangeDetectionStrategy.OnPush` set
-- [ ] Correct export type (default for Pages/Areas, named for Templates/Sections)
-- [ ] **For Templates**: Composes a base component (CardComponent, CustomButton, etc.)
-- [ ] Reused shared components where applicable
-- [ ] Imports use path aliases and barrel files
-- [ ] **Important** Spec file created with basic `should create` test
-- [ ] Barrel export (`index.ts`) updated
-- [ ] Selector follows `app-` prefix convention
-- [ ] Template uses Tailwind utility classes (no component styles)
+## Final Checklist
+
+Before marking the component as done, verify:
+
+- [ ] File is in the correct folder for its type.
+- [ ] File uses the correct suffix (`.template.ts`, `.ts`, `.section.ts`, `.component.ts`).
+- [ ] `ChangeDetectionStrategy.OnPush` is set.
+- [ ] Correct export type (`export default class` for pages/areas, `export class` for everything else).
+- [ ] Uses `input()` / `output()` — not decorators.
+- [ ] Uses `computed()` for derived state when applicable.
+- [ ] Template and styles are inline (no external `.html` / `.scss` files).
+- [ ] No `ngClass` or `ngStyle` used.
+- [ ] **Templates**: compose a base shared component (`CardComponent`, `CustomButton`, etc.).
+- [ ] Imports use path aliases (`@shared/components`, `@features/...`) and barrel files.
+- [ ] Spec file created with `should create` test.
+- [ ] Barrel export (`index.ts`) updated.
+- [ ] Selector follows `app-` prefix convention.
+- [ ] Styling uses Tailwind classes and design tokens — no hardcoded values.
+- [ ] Route added (pages only) with lazy loading and title.
+- [ ] Relevant instruction files were read and their rules applied.

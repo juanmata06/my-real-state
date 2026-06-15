@@ -44,14 +44,18 @@ export const AuthStore = signalStore(
       destroySubject: () => destroy$,
       validateUserLogged(): Promise<void> {
         console.log('Validating user logged');
+        patchState(store, {
+          isAuthLoading: true,
+        });
         const token = localStorageService.getUserToken();
         if (!token) {
+          patchState(store, {
+            isAuthLoading: false,
+          });
           return Promise.resolve();
         }
         patchState(store, {
-          user: null,
           token: token,
-          isAuthLoading: true,
         });
         return new Promise<void>((resolve) => {
           authService
@@ -65,7 +69,6 @@ export const AuthStore = signalStore(
                   isAuthLoading: false,
                 });
               } else {
-                // Token invalid, clear state
                 patchState(store, {
                   user: null,
                   token: null,

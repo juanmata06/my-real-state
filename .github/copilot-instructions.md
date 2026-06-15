@@ -1,128 +1,90 @@
-You are an expert in TypeScript, Angular, and scalable web application development. You write maintainable, performant, and accessible code following Angular and TypeScript best practices.
+# My Real State — Copilot Instructions
 
-## TypeScript Best Practices
+## Project Overview
 
-- Use strict type checking
-- Prefer type inference when the type is obvious
-- Avoid the `any` type; use `unknown` when type is uncertain
+My Real State is a **SaaS platform for real estate property search and management**. It serves as a property listing aggregator where buyers and sellers can discover, compare, and manage real estate properties available for purchase or sale.
 
-## Angular Best Practices
+### Target Users
 
-- Always use standalone components over NgModules
-- Must NOT set `standalone: true` inside Angular decorators. It's the default.
-- Use signals for state management
-- Implement lazy loading for feature routes
-- Do NOT use the `@HostBinding` and `@HostListener` decorators. Put host bindings inside the `host` object of the `@Component` or `@Directive` decorator instead
-- Use `NgOptimizedImage` for all static images.
-  - `NgOptimizedImage` does not work for inline base64 images.
-
-## Components
-
-- Keep components small and focused on a single responsibility
-- Use `input()` and `output()` functions instead of decorators
-- Use `computed()` for derived state
-- Set `changeDetection: ChangeDetectionStrategy.OnPush` in `@Component` decorator
-- Prefer inline templates for small components
-- Prefer Reactive forms instead of Template-driven ones
-- Do NOT use `ngClass`, use `class` bindings instead
-- Do NOT use `ngStyle`, use `style` bindings instead
-
-## State Management
-
-- Use signals for local component state
-- Use `computed()` for derived state
-- Keep state transformations pure and predictable
-- Do NOT use `mutate` on signals, use `update` or `set` instead
-
-## Templates
-
-- Keep templates simple and avoid complex logic
-- Use native control flow (`@if`, `@for`, `@switch`) instead of `*ngIf`, `*ngFor`, `*ngSwitch`
-- Use the async pipe to handle observables
-
-## Services
-
-- Design services around a single responsibility
-- Use the `providedIn: 'root'` option for singleton services
-- Use the `inject()` function instead of constructor injection
-
-## Architecture Patterns
-
-### Component Structure
-
-- Use **standalone components only**. Do not use `NgModule` anywhere.
-- Use three component types:
-  - **Areas**: Use default exports for reusable components, for example: `export default class PrivateArea`.
-  - **Pages**: Use default exports for lazy-loaded routes, for example: `export default class DashboardPage`.
-  - **Templates**: Use named exports for reusable components, for example: `export class ButtonTemplate`.
-- Follow the `name.ts` naming convention, do not use `.components.ts`, for example: `dashboard-page.ts`.
-- Set `changeDetection: ChangeDetectionStrategy.OnPush` in every component.
-
-### Imports & Path Aliases
-
-TypeScript path aliases are defined in [tsconfig.json](tsconfig.json).
-
-**CRITICAL**: Every feature/component folder MUST include an `index.ts` file for public exports.
-
-- [src/app/shared/index.ts](src/app/shared/index.ts) must re-export `components/index` and `interfaces/index`.
-- [src/app/shared/components/index.ts](src/app/shared/components/index.ts) must export all shared components.
-- Always import from barrel files, never from individual files:
-  - Use `from '@shared/components'`
-  - Do not use `from '@shared/components/card/card.component'`
-- When creating new components or features, always update the corresponding `index.ts` export file.
-
-**Always use these aliases. Do not use relative paths.** Example:
-
-```typescript
-import { Task } from '@shared/index';
-import { DraggableTable } from '@shared/components';
-import DashboardPage from '@features/dashboard/dashboard-page/dashboard-page';
-```
-
-### Routing
-
-- Use dynamic imports with default exports for lazy-loaded routes, for example: `loadComponent: () => import('@features/dashboard/dashboard-page/dashboard-page')`.
-- Use layout-based routing: `PrivateArea` wraps authenticated routes and shared header content.
-- Define routes in [app.routes.ts](src/app/app.routes.ts).
-- Keep the auth guard in [app.routes.ts](src/app/app.routes.ts).
-
-### Template Patterns
-
-- Prefer inline templates for simple components.
-- Use native control flow syntax (`@for`, `@if`) instead of structural directives (`*ngFor`, `*ngIf`).
-- Example: `@for (item of todo; let i = $index; track item)`.
-
-### Styling & CSS
-
-- Keep global styles in [src/styles.scss](src/styles.scss).
-- Feature styles in [src/app/styles/](src/app/styles/):
-  - `tailwind-config.scss`: Tailwind CSS 4+ configuration and custom utilities.
-- Use Tailwind CSS 4+ with PostCSS for styling (no traditional Tailwind config file is needed).
-- Use only Tailwind utility classes in templates for responsive and maintainable styling.
-- Do not create component-level `.css` or `.scss` files. The only allowed style files are [src/styles.scss](src/styles.scss) and [src/app/styles/](src/app/styles/).
-
-#### Design Tokens & Global Element Styles
-
-- All CSS custom properties (colors, font sizes) are defined in [src/app/styles/tailwind-config.scss](src/app/styles/tailwind-config.scss). Always base color and typography decisions on the tokens declared there.
-- Global element resets and base styles (headings, form elements, links) are defined in [src/styles.scss](src/styles.scss). Always consult that file before overriding element styles in components.
-
-## Shared Components Library
-
-The project has reusable components in [src/app/shared/components/](src/app/shared/components/). **Always review them before creating new ones** to avoid duplication and stay consistent with established patterns.
-
-- Import exclusively from the barrel file: `import { ... } from '@shared/components'`
-- When adding a new shared component, export it from [src/app/shared/components/index.ts](src/app/shared/components/index.ts)
-- Read each component's source file to understand its API (inputs, outputs, content projection) before using it
-
-## Business Domain
-
-This is a **real estate application** that provides property search and management features for buyers, sellers, and renters.
+- **Buyers**: Search and filter properties by location, price, type, and other criteria.
+- **Sellers**: List properties for sale with photos, descriptions, and pricing, being able to contact customers.
+- **Real Estate Agencies**: Upload and edit property listings, manage client relationships, and handle user accounts.
 
 ### Core Features
 
-- **Property Search**: Find houses and properties based on location, price, and filters
-- **Services**: Buy, sell, and rent properties through real estate agents
-- **Partnerships**: Integration with partners like Zillow for enhanced listings
-- **Property Listings**: Display featured houses with photos, details, and pricing
+- **Property Search**: Advanced search with filters for location, price range, property type, and more.
+- **Property Listings**: Browse featured properties with photo galleries, detailed descriptions, and pricing.
+- **Authentication**: User registration and login with role-based access.
+- **Agent Dashboard**: Property upload and editing, user management, and client communication tools.
 
-### TODO: agregar demas temas como auth, state, http requests a medida que se vayan haciendo
+---
+
+## Technology Stack
+
+| Layer            | Technology                                                    |
+| ---------------- | ------------------------------------------------------------- |
+| Framework        | Angular 20 (standalone components, signals)                   |
+| Language         | TypeScript 5.9 (strict mode)                                  |
+| Styling          | Tailwind CSS 4+ with PostCSS, SCSS for global config          |
+| UI Library       | PrimeNG 20                                                    |
+| State Management | Angular Signals, NgRx Signals (Signal Stores)                 |
+| Backend / BaaS   | Supabase (auth, database, storage)                            |
+| Icons            | Font Awesome (via `@fortawesome/angular-fontawesome`)         |
+| Routing          | Angular Router with lazy loading and layout-based routes      |
+| Testing          | Karma + Jasmine                                               |
+| Formatting       | Prettier (single quotes, 100 char width, Angular HTML parser) |
+
+---
+
+## AI Behavior
+
+You are an expert in TypeScript, Angular, and scalable web application development. You write maintainable, performant, and accessible code following Angular and TypeScript best practices.
+
+### Language
+
+- All code, comments, variable names, and commit messages MUST be written in **English**.
+- All responses and explanations to the user MUST be in **Spanish**.
+
+### Communication Style
+
+- Be direct and concise. Focus on solving the problem or fulfilling the request — no filler, no flattery, no verbose explanations.
+- If the user asks for an explanation, then provide one. Otherwise, deliver the solution.
+- **IMPORTANT**: If you need more context to proceed correctly, **ask the user before guessing**.
+
+---
+
+## MCP Servers
+
+Before executing any user request that involves Angular CLI operations, code generation, or PrimeNG components, **always query the available MCP servers first** in `./.vscode/mcp-servers.json`:
+
+- **`angular-cli`**: Use for Angular best practices (`get_best_practices`), listing workspace projects (`list_projects`), and searching Angular documentation (`search_documentation`). Query this before generating components, services, directives, or any Angular artifact.
+- **PrimeNG docs**: When working with PrimeNG components, search the Angular CLI MCP documentation or official PrimeNG resources to ensure correct API usage and up-to-date component signatures.
+
+---
+
+## Skills
+
+The following custom skills are available. Use them when the task matches their trigger conditions:
+
+| Skill | When to Use |
+| ----- | ----------- |
+| **`create-angular-component`** | Any component creation task: pages, sections, templates, shared components. Triggers: "create a component", "make this a component", "add a new page", "add a section", "new template", and their Spanish equivalents. |
+| **`sync-project-documentation`** | Update project documentation after code changes. Triggers: "update docs", "sync documentation", "sync docs", and their Spanish equivalents. |
+
+---
+
+## Instruction Files
+
+The following instruction files contain detailed conventions for specific topics. **Read and follow the relevant instruction file before writing or modifying code that falls within its scope.**
+
+| Instruction File | Scope |
+| ---------------- | ----- |
+| [architecture.instructions.md](.github/instructions/architecture.instructions.md) | Architecture patterns, folder structure, module organization |
+| [component-structure.instructions.md](.github/instructions/component-structure.instructions.md) | Component types, naming conventions, file structure, decorators |
+| [design-based-styling-components.instructions.md](.github/instructions/design-based-styling-components.instructions.md) | Design implementation, styling components based on design mockups and specifications |
+| [imports-and-path-aliases.instructions.md](.github/instructions/imports-and-path-aliases.instructions.md) | TypeScript path aliases, barrel files, import rules |
+| [routing.instructions.md](.github/instructions/routing.instructions.md) | Route definitions, lazy loading, layout-based routing, guards |
+| [styling.instructions.md](.github/instructions/styling.instructions.md) | Tailwind CSS, design tokens, global styles, SCSS rules |
+| [shared-components.instructions.md](.github/instructions/shared-components.instructions.md) | Shared component library, reuse rules, barrel exports |
+| [state-management.instructions.md](.github/instructions/state-management.instructions.md) | Signals, NgRx Signal Stores, state conventions |
+

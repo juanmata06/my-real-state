@@ -4,7 +4,8 @@ DROP TYPE IF EXISTS public.user_roles CASCADE;
 CREATE TYPE public.user_roles AS ENUM (
   'admin',
   'realtor',
-  'seller'
+  'seller',
+  'customer'
 );
 -- =====================================================================================================================
 
@@ -12,10 +13,10 @@ CREATE TYPE public.user_roles AS ENUM (
 -- PERMISSIONS ENUM
 DROP TYPE IF EXISTS public.role_permissions CASCADE;
 CREATE TYPE public.role_permissions AS ENUM (
-  'create_house',
-  'update_house',
-  'delete_house',
-  'manage_users'
+  'property.create',
+  'property.update',
+  'property.delete',
+  'user.manage'
 );
 -- =====================================================================================================================
 
@@ -31,13 +32,13 @@ CREATE TABLE public.role_to_permissions (
 -- ROLE TO PERMISSIONS SEED:
 INSERT INTO public.role_to_permissions (role, permission)
 VALUES
-  ('admin'::public.user_roles, 'create_house'::public.role_permissions),
-  ('admin'::public.user_roles, 'update_house'::public.role_permissions),
-  ('admin'::public.user_roles, 'delete_house'::public.role_permissions),
-  ('admin'::public.user_roles, 'manage_users'::public.role_permissions),
-  ('realtor'::public.user_roles, 'create_house'::public.role_permissions),
-  ('realtor'::public.user_roles, 'update_house'::public.role_permissions),
-  ('realtor'::public.user_roles, 'delete_house'::public.role_permissions)
+  ('admin'::public.user_roles, 'property.create'::public.role_permissions),
+  ('admin'::public.user_roles, 'property.update'::public.role_permissions),
+  ('admin'::public.user_roles, 'property.delete'::public.role_permissions),
+  ('admin'::public.user_roles, 'user.manage'::public.role_permissions),
+  ('realtor'::public.user_roles, 'property.create'::public.role_permissions),
+  ('realtor'::public.user_roles, 'property.update'::public.role_permissions),
+  ('realtor'::public.user_roles, 'property.delete'::public.role_permissions)
 ON CONFLICT DO NOTHING;
 -- =====================================================================================================================
 
@@ -60,9 +61,9 @@ ON CONFLICT DO NOTHING;
 -- =====================================================================================================================
 
 -- =====================================================================================================================
--- PROPERTY TYPE ENUM
-DROP TYPE IF EXISTS public.property_type CASCADE;
-CREATE TYPE public.property_type AS ENUM (
+-- PROPERTY TYPES ENUM
+DROP TYPE IF EXISTS public.property_types CASCADE;
+CREATE TYPE public.property_types AS ENUM (
   'House',
   'Apartment',
   'Building',
@@ -76,9 +77,9 @@ CREATE TYPE public.property_type AS ENUM (
 -- =====================================================================================================================
 
 -- =====================================================================================================================
--- MARKET TYPE ENUM
-DROP TYPE IF EXISTS public.market_type CASCADE;
-CREATE TYPE public.market_type AS ENUM (
+-- MARKET TYPES ENUM
+DROP TYPE IF EXISTS public.market_types CASCADE;
+CREATE TYPE public.market_types AS ENUM (
   'Sale',
   'Rent'
 );
@@ -126,14 +127,14 @@ CREATE TYPE public.market_tags AS ENUM (
 -- =====================================================================================================================
 
 -- =====================================================================================================================
--- PROPERTY
-DROP TABLE IF EXISTS public.property CASCADE;
-CREATE TABLE public.property (
+-- PROPERTIES
+DROP TABLE IF EXISTS public.properties CASCADE;
+CREATE TABLE public.properties (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   title text NOT NULL,
   url text,
-  property_type public.property_type,
-  market_type public.market_type,
+  property_type public.property_types,
+  market_type public.market_types,
   realtor_id uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   created_by uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   description text,
@@ -156,8 +157,8 @@ CREATE TABLE public.property (
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- PROPERTY SEED:
-INSERT INTO public.property (
+-- PROPERTIES SEED:
+INSERT INTO public.properties (
   title,
   url,
   property_type,
@@ -183,10 +184,10 @@ INSERT INTO public.property (
 ) VALUES (
   'Beautiful Modern House',
   'https://example.com/property-1',
-  'House'::public.property_type,
-  'Sale'::public.market_type,
-  'b853a96d-2131-4a3b-bd49-5c32e354b998',
-  'b853a96d-2131-4a3b-bd49-5c32e354b998',
+  'House'::public.property_types,
+  'Sale'::public.market_types,
+  '', -- ADMIN USER ID HERE
+  '', -- ADMIN USER ID HERE
   'A stunning modern house with all amenities',
   'Located in a quiet and safe neighborhood',
   450000,
@@ -204,116 +205,4 @@ INSERT INTO public.property (
   ARRAY['Security'::public.property_features, 'Gym'::public.property_features],
   ARRAY['Featured'::public.market_tags, 'Luxury'::public.market_tags, 'NewConstruction'::public.market_tags]
 );
--- =====================================================================================================================
-
--- =====================================================================================================================
--- ACCESS TOKEN CLAIMS ENRICHMENT
--- =====================================================================================================================
-
--- Create the auth hook function
-CREATE OR REPLACE FUNCTION public.custom_access_token_hook(event jsonb)
-RETURNS jsonb
-LANGUAGE plpgsql
-STABLE
-AS $$
-  DECLARE
-    claims jsonb;
-    user_role public.user_roles;
-  BEGIN
-    -- Fetch the user role in the user_to_roles table
-    SELECT role INTO user_role FROM public.user_to_roles WHERE user_id = (event->>'user_id')::uuid;
-
-    claims := event->'claims';
-
-    IF user_role IS NOT NULL THEN
-      -- Set the claim
-      claims := jsonb_set(claims, '{user_role}', to_jsonb(user_role));
-    ELSE
-      claims := jsonb_set(claims, '{user_role}', 'null');
-    END IF;
-
-    -- Update the 'claims' object in the original event
-    event := jsonb_set(event, '{claims}', claims);
-
-    -- Return the modified or original event
-    RETURN event;
-  END;
-$$;
-
-GRANT USAGE ON SCHEMA public TO supabase_auth_admin;
-
-GRANT EXECUTE
-  ON FUNCTION public.custom_access_token_hook
-  TO supabase_auth_admin;
-
-REVOKE EXECUTE
-  ON FUNCTION public.custom_access_token_hook
-  FROM authenticated, anon, public;
-
-GRANT ALL
-  ON TABLE public.user_to_roles
-  TO supabase_auth_admin;
-
-REVOKE ALL
-  ON TABLE public.user_to_roles
-  FROM authenticated, anon, public;
-
-CREATE POLICY "Allow auth admin to read user roles" ON public.user_to_roles
-AS PERMISSIVE FOR SELECT
-TO supabase_auth_admin
-USING (true);
-
--- =====================================================================================================================
--- AUTHORIZE PERMISSION BY USER ROLE
--- =====================================================================================================================
-
-CREATE OR REPLACE FUNCTION public.authorize(
-  requested_permission public.role_permissions
-)
-RETURNS boolean AS $$
-DECLARE
-  bind_permissions int;
-  user_role public.user_roles;
-BEGIN
-  -- Fetch user role once and store it to reduce number of calls
-  SELECT (auth.jwt() ->> 'user_role')::public.user_roles INTO user_role;
-
-  SELECT COUNT(*)
-  INTO bind_permissions
-  FROM public.role_to_permissions
-  WHERE role_to_permissions.permission = requested_permission
-    AND role_to_permissions.role = user_role;
-
-  RETURN bind_permissions > 0;
-END;
-$$ LANGUAGE plpgsql STABLE SECURITY DEFINER SET search_path = '';
-
--- =====================================================================================================================
--- AUTHORIZE PROPERTY OPERATIONS
--- =====================================================================================================================
-
-CREATE POLICY "Allow authorized insert access"
-ON public.property
-FOR INSERT
-TO authenticated
-WITH CHECK (
-  (SELECT public.authorize('create_house'::public.role_permissions))
-);
-
-CREATE POLICY "Allow authorized update access"
-ON public.property
-FOR UPDATE
-TO authenticated
-USING (
-  (SELECT public.authorize('update_house'::public.role_permissions))
-);
-
-CREATE POLICY "Allow authorized delete access"
-ON public.property
-FOR DELETE
-TO authenticated
-USING (
-  (SELECT public.authorize('delete_house'::public.role_permissions))
-);
-
 -- =====================================================================================================================

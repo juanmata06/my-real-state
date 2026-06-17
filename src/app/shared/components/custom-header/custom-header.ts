@@ -20,7 +20,7 @@ import { Router } from '@angular/router';
           <a href="#" class="text-black hover:opacity-80 transition">Get help</a>
         </div>
 
-        <app-custom-button href="/auth/login">Sign in</app-custom-button>
+        <app-custom-button (click)="onButtonClicked()">Sign in</app-custom-button>
       </nav>
     </header>
   `,

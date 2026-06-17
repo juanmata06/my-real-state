@@ -1,5 +1,14 @@
 import { SupabaseAgent, Agent } from './agent.interfaces';
 
+export interface HouseInfo {
+  title?: string;
+  price: string;
+  currency?: string;
+  status?: string;
+  isFeatured?: boolean;
+  isReady?: boolean;
+}
+
 // Enums
 export enum PropertyType {
   House = 1,

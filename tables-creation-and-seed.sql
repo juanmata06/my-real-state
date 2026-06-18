@@ -206,3 +206,85 @@ INSERT INTO public.properties (
   ARRAY['Featured'::public.market_tags, 'Luxury'::public.market_tags, 'NewConstruction'::public.market_tags]
 );
 -- =====================================================================================================================
+
+-- =====================================================================================================================
+-- USER PROFILES
+DROP TABLE IF EXISTS public.user_profiles CASCADE;
+CREATE TABLE public.user_profiles (
+  user_id uuid PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+  first_name text,
+  last_name text,
+  city text,
+  state text,
+  country text,
+  zip_code text,
+  birth_date DATE,
+  profile_image_url text,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- USER PROFILES SEED:
+INSERT INTO public.user_profiles (
+  user_id,
+  first_name,
+  last_name,
+  city,
+  state,
+  country,
+  zip_code,
+  birth_date,
+  profile_image_url
+) VALUES (
+  '', -- USER ID HERE
+  'Juan',
+  'Mata',
+  'Pampatar',
+  'Nueva Esparta',
+  'Venezuela',
+  '00000',
+  '2001-01-06',
+  NULL
+)
+ON CONFLICT DO NOTHING;
+-- =====================================================================================================================
+
+-- =====================================================================================================================
+-- EMPLOYEE PROFILES
+DROP TABLE IF EXISTS public.employee_profiles CASCADE;
+CREATE TABLE public.employee_profiles (
+  user_id uuid PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+  agency text,
+  hire_date DATE,
+  manager_id uuid REFERENCES auth.users(id) ON DELETE SET NULL,
+  linkedin_url text,
+  driving_license BOOLEAN DEFAULT FALSE,
+  own_car BOOLEAN DEFAULT FALSE,
+  company_car BOOLEAN DEFAULT FALSE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- EMPLOYEE PROFILES SEED:
+INSERT INTO public.employee_profiles (
+  user_id,
+  agency,
+  hire_date,
+  manager_id,
+  linkedin_url,
+  driving_license,
+  own_car,
+  company_car
+) VALUES (
+  '', -- USER ID HERE
+  'My Real Estate Agency',
+  '2024-01-15',
+  '', -- USER ID HERE
+  NULL,
+  TRUE,
+  TRUE,
+  FALSE
+)
+ON CONFLICT DO NOTHING;
+-- =====================================================================================================================
+

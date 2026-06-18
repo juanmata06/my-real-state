@@ -10,7 +10,7 @@ import { provideRouter } from '@angular/router';
 import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeuix/themes/aura';
 import { DialogService } from 'primeng/dynamicdialog';
-import { AuthStore } from '@shared/store';
+import { ApiDataStore, AuthStore } from '@shared/store';
 import { routes } from './app.routes';
 
 export const appConfig: ApplicationConfig = {
@@ -21,7 +21,7 @@ export const appConfig: ApplicationConfig = {
     provideAnimationsAsync(),
     provideAppInitializer(async () => {
       const authStore = inject(AuthStore);
-      await authStore.validateUserLogged();
+      const apiDataStore = inject(ApiDataStore);
     }),
     providePrimeNG({
       theme: {

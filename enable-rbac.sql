@@ -1,5 +1,5 @@
 -- =====================================================================================================================
--- STEP 1: CREATE AUTH HOOK TO APPLY USER ROLE ON JWT CLAIMS
+-- CREATE AUTH HOOK TO APPLY USER ROLE ON JWT CLAIMS
 CREATE OR REPLACE FUNCTION public.custom_access_token_hook(event jsonb)
 RETURNS jsonb
 LANGUAGE plpgsql
@@ -55,7 +55,6 @@ USING (true);
 -- =====================================================================================================================
 
 -- =====================================================================================================================
--- STEP 2: 
 -- TODO: ENABLE THE HOOK [AUTHENTICATION > HOOKS (BETA)] 
 -- =====================================================================================================================
 
@@ -84,9 +83,10 @@ $$ LANGUAGE plpgsql STABLE SECURITY DEFINER SET search_path = '';
 -- =====================================================================================================================
 
 -- =====================================================================================================================
--- STEP 4: CREATE RLS POLICIES FOR TABLES USING THE AUTHORIZE FUNCTION
+-- CREATE RLS POLICIES FOR TABLES USING THE AUTHORIZE FUNCTION
 
 -- PROPERTIES POLICIES
+ALTER TABLE public.properties ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Allow anyone to read properties" ON public.properties;
 CREATE POLICY "Allow anyone to read properties" ON public.properties FOR SELECT USING (true);
 DROP POLICY IF EXISTS "Allow only authorized to create properties" ON public.properties;
@@ -97,6 +97,7 @@ DROP POLICY IF EXISTS "Allow only authorized to delete properties" ON public.pro
 CREATE POLICY "Allow only authorized to delete properties" ON public.properties FOR DELETE TO authenticated USING ( (SELECT authorize('property.delete')) );
 
 -- ROLE_TO_PERMISSIONS POLICIES
+ALTER TABLE public.role_to_permissions ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Allow anyone to read role permissions" ON public.role_to_permissions;
 CREATE POLICY "Allow anyone to read role permissions" ON public.role_to_permissions FOR SELECT USING (true);
 DROP POLICY IF EXISTS "Allow only authorized to create role permissions" ON public.role_to_permissions;
@@ -107,6 +108,7 @@ DROP POLICY IF EXISTS "Allow only authorized to delete role permissions" ON publ
 CREATE POLICY "Allow only authorized to delete role permissions" ON public.role_to_permissions FOR DELETE TO authenticated USING ( (SELECT authorize('user.manage')) );
 
 -- USER_TO_ROLES POLICIES
+ALTER TABLE public.user_to_roles ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Allow anyone to read user roles" ON public.user_to_roles;
 CREATE POLICY "Allow anyone to read user roles" ON public.user_to_roles FOR SELECT USING (true);
 DROP POLICY IF EXISTS "Allow only authorized to create user roles" ON public.user_to_roles;
@@ -115,4 +117,72 @@ DROP POLICY IF EXISTS "Allow only authorized to update user roles" ON public.use
 CREATE POLICY "Allow only authorized to update user roles" ON public.user_to_roles FOR UPDATE TO authenticated USING ( (SELECT authorize('user.manage')) ) WITH CHECK ( (SELECT authorize('user.manage')) );
 DROP POLICY IF EXISTS "Allow only authorized to delete user roles" ON public.user_to_roles;
 CREATE POLICY "Allow only authorized to delete user roles" ON public.user_to_roles FOR DELETE TO authenticated USING ( (SELECT authorize('user.manage')) );
+
+-- USER_PROFILES POLICIES
+ALTER TABLE public.user_profiles ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Allow authorized or owner to read user profiles" ON public.user_profiles;
+CREATE POLICY "Allow authorized or owner to read user profiles" ON public.user_profiles FOR SELECT TO authenticated USING ( auth.uid() = user_id OR (SELECT authorize('user.manage')) );
+DROP POLICY IF EXISTS "Allow authorized or owner to create user profiles" ON public.user_profiles;
+CREATE POLICY "Allow authorized or owner to create user profiles" ON public.user_profiles FOR INSERT TO authenticated WITH CHECK ( auth.uid() = user_id OR (SELECT authorize('user.manage')) );
+DROP POLICY IF EXISTS "Allow authorized or owner to update user profiles" ON public.user_profiles;
+CREATE POLICY "Allow authorized or owner to update user profiles" ON public.user_profiles FOR UPDATE TO authenticated USING ( auth.uid() = user_id OR (SELECT authorize('user.manage')) ) WITH CHECK ( auth.uid() = user_id OR (SELECT authorize('user.manage')) );
+DROP POLICY IF EXISTS "Allow authorized or owner to delete user profiles" ON public.user_profiles;
+CREATE POLICY "Allow authorized or owner to delete user profiles" ON public.user_profiles FOR DELETE TO authenticated USING ( auth.uid() = user_id OR (SELECT authorize('user.manage')) );
+
+-- EMPLOYEE_PROFILES POLICIES
+ALTER TABLE public.employee_profiles ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Allow authorized or owner to read employee profiles" ON public.employee_profiles;
+CREATE POLICY "Allow authorized or owner to read employee profiles" ON public.employee_profiles FOR SELECT TO authenticated USING ( auth.uid() = user_id OR (SELECT authorize('user.manage')) );
+DROP POLICY IF EXISTS "Allow authorized or owner to create employee profiles" ON public.employee_profiles;
+CREATE POLICY "Allow authorized or owner to create employee profiles" ON public.employee_profiles FOR INSERT TO authenticated WITH CHECK ( auth.uid() = user_id OR (SELECT authorize('user.manage')) );
+DROP POLICY IF EXISTS "Allow authorized or owner to update employee profiles" ON public.employee_profiles;
+CREATE POLICY "Allow authorized or owner to update employee profiles" ON public.employee_profiles FOR UPDATE TO authenticated USING ( auth.uid() = user_id OR (SELECT authorize('user.manage')) ) WITH CHECK ( auth.uid() = user_id OR (SELECT authorize('user.manage')) );
+DROP POLICY IF EXISTS "Allow authorized or owner to delete employee profiles" ON public.employee_profiles;
+CREATE POLICY "Allow authorized or owner to delete employee profiles" ON public.employee_profiles FOR DELETE TO authenticated USING ( auth.uid() = user_id OR (SELECT authorize('user.manage')) );
 -- =====================================================================================================================
+
+-- =====================================================================================================================
+-- ENUM GETTER FUNCTIONS
+CREATE OR REPLACE FUNCTION public.get_user_roles()
+RETURNS text[]
+LANGUAGE sql
+AS $$
+  SELECT enum_range(NULL::public.user_roles)::text[];
+$$;
+
+CREATE OR REPLACE FUNCTION public.get_role_permissions()
+RETURNS text[]
+LANGUAGE sql
+AS $$
+  SELECT enum_range(NULL::public.role_permissions)::text[];
+$$;
+
+CREATE OR REPLACE FUNCTION public.get_property_types()
+RETURNS text[]
+LANGUAGE sql
+AS $$
+  SELECT enum_range(NULL::public.property_types)::text[];
+$$;
+
+CREATE OR REPLACE FUNCTION public.get_market_types()
+RETURNS text[]
+LANGUAGE sql
+AS $$
+  SELECT enum_range(NULL::public.market_types)::text[];
+$$;
+
+CREATE OR REPLACE FUNCTION public.get_property_features()
+RETURNS text[]
+LANGUAGE sql
+AS $$
+  SELECT enum_range(NULL::public.property_features)::text[];
+$$;
+
+CREATE OR REPLACE FUNCTION public.get_market_tags()
+RETURNS text[]
+LANGUAGE sql
+AS $$
+  SELECT enum_range(NULL::public.market_tags)::text[];
+$$;
+-- =====================================================================================================================
+

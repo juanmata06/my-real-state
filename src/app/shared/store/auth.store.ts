@@ -165,9 +165,9 @@ export const AuthStore = signalStore(
     }),
   ),
   withHooks({
-    // onInit(store) {
-    //   store.validateUserLogged();
-    // },
+    onInit(store) {
+      store.validateUserLogged();
+    },
     onDestroy(store) {
       store.destroySubject().next();
       store.destroySubject().complete();

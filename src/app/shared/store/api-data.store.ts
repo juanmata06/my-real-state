@@ -4,8 +4,7 @@ import { patchState, signalStore, withHooks, withMethods, withState } from '@ngr
 import { ApiDataService } from '@shared/services';
 
 type ApiDataState = {
-  userRoles: string[];
-  rolePermissions: string[];
+
   propertyTypes: string[];
   marketTypes: string[];
   propertyFeatures: string[];
@@ -14,8 +13,6 @@ type ApiDataState = {
 };
 
 const initialState: ApiDataState = {
-  userRoles: [],
-  rolePermissions: [],
   propertyTypes: [],
   marketTypes: [],
   propertyFeatures: [],
@@ -31,8 +28,6 @@ export const ApiDataStore = signalStore(
     loadApiData(): void {
       patchState(store, { isLoading: true });
       forkJoin({
-        userRoles: apiDataService.getUserRoles(),
-        rolePermissions: apiDataService.getRolePermissions(),
         propertyTypes: apiDataService.getPropertyTypes(),
         marketTypes: apiDataService.getMarketTypes(),
         propertyFeatures: apiDataService.getPropertyFeatures(),
@@ -41,15 +36,19 @@ export const ApiDataStore = signalStore(
         .pipe(takeUntil(destroy$))
         .subscribe({
           next: (responses) => {
-            console.log(responses);
             patchState(store, {
-              userRoles: responses.userRoles.data || [],
-              rolePermissions: responses.rolePermissions.data || [],
               propertyTypes: responses.propertyTypes.data || [],
               marketTypes: responses.marketTypes.data || [],
               propertyFeatures: responses.propertyFeatures.data || [],
               marketTags: responses.marketTags.data || [],
               isLoading: false,
+            });
+            console.log('Current API Data State:', {
+              propertyTypes: store.propertyTypes(),
+              marketTypes: store.marketTypes(),
+              propertyFeatures: store.propertyFeatures(),
+              marketTags: store.marketTags(),
+              isLoading: store.isLoading(),
             });
           },
           error: (error) => {

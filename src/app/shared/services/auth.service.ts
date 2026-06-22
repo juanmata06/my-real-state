@@ -1,9 +1,8 @@
 import { inject, Injectable } from '@angular/core';
-import { from, map, Observable, tap } from 'rxjs';
+import { from, map, Observable } from 'rxjs';
 import { AuthResponse, User } from '@supabase/supabase-js';
 import { SupabaseService } from './supabase.service';
 import { UserLogin, UserRegister } from '@shared/models';
-import { jwtDecode } from 'jwt-decode';
 
 @Injectable({
   providedIn: 'root',
@@ -30,16 +29,6 @@ export class AuthService {
       this.supabase.auth.signInWithPassword({
         email: userLogin.email,
         password: userLogin.password,
-      }),
-    ).pipe(
-      tap(({ data }) => {
-        const token = data.session?.access_token;
-
-        if (token) {
-          const payload: any = jwtDecode(token);
-          console.log('JWT payload:', payload);
-          console.log('Role:', payload.user_role);
-        }
       }),
     );
   }

@@ -143,20 +143,6 @@ CREATE POLICY "Allow authorized or owner to delete employee profiles" ON public.
 
 -- =====================================================================================================================
 -- ENUM GETTER FUNCTIONS
-CREATE OR REPLACE FUNCTION public.get_user_roles()
-RETURNS text[]
-LANGUAGE sql
-AS $$
-  SELECT enum_range(NULL::public.user_roles)::text[];
-$$;
-
-CREATE OR REPLACE FUNCTION public.get_role_permissions()
-RETURNS text[]
-LANGUAGE sql
-AS $$
-  SELECT enum_range(NULL::public.role_permissions)::text[];
-$$;
-
 CREATE OR REPLACE FUNCTION public.get_property_types()
 RETURNS text[]
 LANGUAGE sql
@@ -185,4 +171,24 @@ AS $$
   SELECT enum_range(NULL::public.market_tags)::text[];
 $$;
 -- =====================================================================================================================
+
+-- =====================================================================================================================
+-- ROLE PERMISSIONS GETTER FUNCTION
+CREATE OR REPLACE FUNCTION public.get_role_permissions_by_role(
+  requested_role public.user_roles
+)
+RETURNS public.role_permissions[]
+LANGUAGE sql
+STABLE
+AS $$
+  SELECT COALESCE(
+    ARRAY_AGG(rtp.permission ORDER BY rtp.permission),
+    ARRAY[]::public.role_permissions[]
+  )
+  FROM public.role_to_permissions rtp
+  WHERE rtp.role = requested_role;
+$$;
+-- =====================================================================================================================
+
+
 

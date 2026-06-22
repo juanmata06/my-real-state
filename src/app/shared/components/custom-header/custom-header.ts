@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { CustomButton } from '../custom-button/custom-button';
 import { Router } from '@angular/router';
+import { AuthStore } from '@shared/store';
 
 @Component({
   selector: 'app-custom-header',
@@ -18,6 +19,9 @@ import { Router } from '@angular/router';
           <a href="#" class="text-black hover:opacity-80 transition">Manage rentals</a>
           <a href="#" class="text-black hover:opacity-80 transition">Advertise</a>
           <a href="#" class="text-black hover:opacity-80 transition">Get help</a>
+          @if (this.isLoggedIn()) {
+            <a href="/private-area/dashboard" class="text-black hover:opacity-80 transition">Dashboard</a>
+          }
         </div>
 
         <app-custom-button (click)="onButtonClicked()">Sign in</app-custom-button>
@@ -28,6 +32,8 @@ import { Router } from '@angular/router';
 })
 export class CustomHeader {
   private _router = inject(Router);
+  private authStore = inject(AuthStore);
+  protected readonly isLoggedIn = computed(() => this.authStore.isLoggedIn());
 
   onButtonClicked(): void {    
     this._router.navigate(['/auth/login']);

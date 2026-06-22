@@ -8,12 +8,12 @@ import { SupabaseService } from './supabase.service';
 export class ApiDataService {
   private readonly supabase = inject(SupabaseService).supabase;
 
-  public getUserRoles(): Observable<any> {
-    return from(this.supabase.rpc('get_user_roles'));
-  }
-
-  public getRolePermissions(): Observable<any> {
-    return from(this.supabase.rpc('get_role_permissions'));
+  public getRolePermissionsByRole(requestedRole: string): Observable<any> {
+    return from(
+      this.supabase.rpc('get_role_permissions_by_role', {
+        requested_role: requestedRole,
+      }),
+    );
   }
 
   public getPropertyTypes(): Observable<any> {

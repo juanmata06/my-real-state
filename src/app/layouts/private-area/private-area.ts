@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { CustomHeader } from "@shared/components";
-import { RouterOutlet } from "@angular/router";
+import { CustomHeader } from '@shared/components';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
-  selector: 'app-public-area',
+  selector: 'app-private-area',
   imports: [CustomHeader, RouterOutlet],
   template: `
     <app-custom-header />
@@ -11,4 +11,4 @@ import { RouterOutlet } from "@angular/router";
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export default class PublicArea { }
+export default class PrivateArea {}

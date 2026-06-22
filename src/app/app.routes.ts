@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { noAuthGuard } from '@shared/guards';
+import { authGuard, noAuthGuard } from '@shared/guards';
 
 export const routes: Routes = [
   {
@@ -20,6 +20,22 @@ export const routes: Routes = [
       {
         path: '**',
         redirectTo: 'login',
+      },
+    ],
+  },
+  {
+    path: 'private-area',
+    canActivateChild: [authGuard],
+    loadComponent: () => import('@layouts/private-area/private-area'),
+    children: [
+      {
+        path: 'dashboard',
+        loadComponent: () => import('@features/dashboard/pages/dashboard-page/dashboard-page'),
+        title: 'Dashboard',
+      },
+      {
+        path: '**',
+        redirectTo: 'dashboard',
       },
     ],
   },
@@ -45,21 +61,5 @@ export const routes: Routes = [
       },
     ],
   },
-  //   {
-  //     path: 'private-area',
-  //     canActivateChild: [authGuard],
-  //     loadComponent: () => import('@layouts/private-area/private-area'),
-  //     children: [
-  //       {
-  //         path: 'dashboard',
-  //         loadComponent: () => import('@features/dashboard/dashboard-page/dashboard-page'),
-  //         title: 'Dashboard',
-  //       },
-  //       {
-  //         path: '**',
-  //         redirectTo: 'dashboard',
-  //       },
-  //     ],
-  //   },
   { path: '**', redirectTo: 'auth' },
 ];

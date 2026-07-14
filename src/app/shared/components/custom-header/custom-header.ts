@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { CustomButton } from '../custom-button/custom-button';
 import { Router } from '@angular/router';
 import { AuthStore } from '@shared/store';
 
 @Component({
   selector: 'app-custom-header',
-  imports: [CustomButton],
+  imports: [CustomButton, RouterLink],
   template: `
     <header>
       <nav class="p-4 flex justify-between items-center gap-4 bg-white">
@@ -20,7 +21,7 @@ import { AuthStore } from '@shared/store';
           <a href="#" class="text-black hover:opacity-80 transition">Advertise</a>
           <a href="#" class="text-black hover:opacity-80 transition">Get help</a>
           @if (this.isLoggedIn()) {
-            <a href="/private-area/dashboard" class="text-black hover:opacity-80 transition">Dashboard</a>
+            <a routerLink="/private-area/dashboard" class="text-black hover:opacity-80 transition">Dashboard</a>
           }
         </div>
 

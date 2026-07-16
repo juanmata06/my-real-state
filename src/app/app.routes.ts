@@ -33,6 +33,31 @@ export const routes: Routes = [
         loadComponent: () => import('@features/dashboard/pages/dashboard-page/dashboard-page'),
         title: 'Dashboard',
       },
+       {
+        path: 'properties',
+        loadComponent: () => import('@features/properties/pages/properties-list/properties-list'),
+        title: 'Properties',
+      },
+      {
+        path: 'brokers',
+        loadComponent: () => import('@features/brokers/pages/brokers-list/brokers-list'),
+        title: 'Brokers',
+      },
+      {
+        path: 'customers',
+        loadComponent: () => import('@features/customers/pages/customers-list/customers-list'),
+        title: 'Customers',
+      },
+      {
+        path: 'sales',
+        loadComponent: () => import('@features/sales/pages/sales-list/sales-list'),
+        title: 'Sales',
+      },
+      {
+        path: 'rents',
+        loadComponent: () => import('@features/rents/pages/rents-list/rents-list'),
+        title: 'Rents',
+      },
       {
         path: '**',
         redirectTo: 'dashboard',

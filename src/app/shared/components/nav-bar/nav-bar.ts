@@ -1,10 +1,12 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { BadgeButton } from '../badge-button/badge-button';
 import {
+  faChartLine,
   faDoorOpen,
-  faGraduationCap,
   faHouse,
-  faUserGraduate,
+  faKey,
+  faMoneyBill1,
+  faUserGroup,
 } from '@fortawesome/free-solid-svg-icons';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthStore } from '@shared/store';
@@ -29,7 +31,7 @@ import { AuthStore } from '@shared/store';
               [routerLinkActiveOptions]="{ exact: true }"
             >
               <app-badge-button
-                [icon]="faHouse"
+                [icon]="faChartLine"
                 [isOnFocus]="link.isActive"
                 (onClickButton)="(null)"
               >
@@ -39,17 +41,65 @@ import { AuthStore } from '@shared/store';
           </li>
           <li>
             <a
-              [routerLink]="'/students'"
+              [routerLink]="'/private-area/properties'"
               routerLinkActive
               #link2="routerLinkActive"
               [routerLinkActiveOptions]="{ exact: true }"
             >
               <app-badge-button
-                [icon]="faUserGraduate"
+                [icon]="faHouse"
                 [isOnFocus]="link2.isActive"
                 (onClickButton)="(null)"
               >
-                Students
+                Properties
+              </app-badge-button>
+            </a>
+          </li>
+          <li>
+            <a
+              [routerLink]="'/private-area/customers'"
+              routerLinkActive
+              #link3="routerLinkActive"
+              [routerLinkActiveOptions]="{ exact: true }"
+            >
+              <app-badge-button
+                [icon]="faUserGroup"
+                [isOnFocus]="link3.isActive"
+                (onClickButton)="(null)"
+              >
+                Customers
+              </app-badge-button>
+            </a>
+          </li>
+          <li>
+            <a
+              [routerLink]="'/private-area/sales'"
+              routerLinkActive
+              #link4="routerLinkActive"
+              [routerLinkActiveOptions]="{ exact: true }"
+            >
+              <app-badge-button
+                [icon]="faMoneyBill1"
+                [isOnFocus]="link4.isActive"
+                (onClickButton)="(null)"
+              >
+                Sales
+              </app-badge-button>
+            </a>
+          </li>
+          <li>
+            <a
+              [routerLink]="'/private-area/rents'"
+              routerLinkActive
+              #link5="routerLinkActive"
+              [routerLinkActiveOptions]="{ exact: true }"
+            >
+              <app-badge-button
+                [icon]="faKey"
+                [isOnFocus]="link5.isActive"
+                (onClickButton)="(null)"
+              >
+                Rents
               </app-badge-button>
             </a>
           </li>
@@ -65,10 +115,12 @@ import { AuthStore } from '@shared/store';
 export class NavBar {
   public readonly authStore = inject(AuthStore);
 
+  public readonly faChartLine = faChartLine;
   public readonly faHouse = faHouse;
-  public readonly faGraduationCap = faGraduationCap;
   public readonly faDoorOpen = faDoorOpen;
-  public readonly faUserGraduate = faUserGraduate;
+  public readonly faUserGroup = faUserGroup;
+  public readonly faMoneyBill1 = faMoneyBill1;
+  public readonly faKey = faKey;
 
   logout(): void {
     this.authStore.logOutUser();

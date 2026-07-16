@@ -6,7 +6,7 @@ import { ButtonModule } from 'primeng/button';
   template: `
     <button
       pButton
-      class="px-3 py-1 font-bold border-1 rounded-lg cursor-pointer hover:opacity-90"
+      class="px-2 py-1 font-bold border-1 rounded-lg cursor-pointer hover:opacity-90"
       [class.bg-primary]="isPrimary() || (!isSecondary() && !isTransparent())"
       [class.bg-secondary]="isSecondary()"
       [class.bg-transparent]="isTransparent()"

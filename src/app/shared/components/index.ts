@@ -11,3 +11,5 @@ export * from './ask-section/ask-section';
 export * from './modals/index';
 export * from './login-form/login-form.component';
 export * from './register-form/register-form.component';
+export * from './nav-bar/nav-bar';
+export * from './badge-button/badge-button';

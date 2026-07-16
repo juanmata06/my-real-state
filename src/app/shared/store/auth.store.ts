@@ -276,6 +276,7 @@ export const AuthStore = signalStore(
               });
               tokenStore.setToken('');
               localStorageService.deleteUserToken();
+              router.navigate(['/']);
             },
             error: (err) => {
               console.error('SignOut error:', err);

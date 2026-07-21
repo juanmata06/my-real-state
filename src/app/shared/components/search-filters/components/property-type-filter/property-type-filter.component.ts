@@ -8,7 +8,7 @@ import { ApiDataStore } from '@shared/store';
   imports: [CustomChipComponent],
   template: `
     <div class="py-2">
-      <h4 class="font-semibold mb-4">Property Type:</h4>
+      <span class="flex font-bold pb-2">Property Type</span>
       <div class="flex flex-wrap items-start gap-4">
         @for (propertyType of propertyTypes(); track propertyType.label) {
           <app-custom-chip

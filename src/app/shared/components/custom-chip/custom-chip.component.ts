@@ -8,21 +8,17 @@ import { IconDefinition } from '@fortawesome/free-solid-svg-icons';
   template: `
     <button
       type="button"
-      class="inline-flex min-h-12 items-center justify-center gap-2 rounded-lg border px-2 py-1 text-base font-bold transition-colors cursor-pointer hover:opacity-90"
-      [class.bg-white]="true"
+      class="inline-flex items-center justify-center gap-2 rounded-lg border px-2 py-1 cursor-pointer"
+      [class.bg-white]="isFocus()"
+      [class.font-bold]="isFocus()"
       [class.border-2]="isFocus()"
-      [class.border]="!isFocus()"
-      [class.border-slate-900]="isFocus()"
-      [class.border-slate-300]="!isFocus()"
-      [class.text-slate-800]="true"
-      [class.font-semibold]="isFocus()"
+      [class.font-bold]="isFocus()"
       (click)="chipClicked.emit()"
     >
       @if (icon()) {
         <fa-icon
           [icon]="icon()!"
-          size="lg"
-          class="text-slate-700"
+          size="xs"
         />
       }
       <span>{{ label() }}</span>

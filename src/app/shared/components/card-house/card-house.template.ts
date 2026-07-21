@@ -20,7 +20,7 @@ import { CustomImagesGallery } from '../custom-images-gallery/custom-images-gall
   selector: 'app-card-house-template',
   imports: [CurrencyPipe, CardComponent, CustomButton, FaIconComponent, CustomImagesGallery, RouterLink],
   template: `
-    <app-card class="cursor-pointer" [routerLink]="['/search', property().id]">
+    <app-card isNotShadow class="cursor-pointer" [routerLink]="['/search', property().id]">
       <div class="@container">
         <div class="flex flex-col @md:flex-row">
           <div class="w-full h-48 flex-shrink-0 overflow-hidden @md:w-64 @md:h-auto">

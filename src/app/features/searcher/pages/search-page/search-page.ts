@@ -1,35 +1,27 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit, Signal } from '@angular/core';
 import { CardHouseTemplate, SearchFiltersComponent } from '@shared/components';
+import { CardComponent } from '@shared/components/card/card.component';
 import { Property } from '@shared/models';
 import { PropertiesStore } from '@shared/store';
 
 @Component({
   selector: 'app-search-page',
-  imports: [CardHouseTemplate, SearchFiltersComponent],
+  imports: [CardHouseTemplate, SearchFiltersComponent, CardComponent],
   template: `
-    <div class="py-16 px-4">
-      <div class="max-w-6xl mx-auto">
-        <header class="mb-8">
-          <h1 class="text-3xl font-bold">Search results</h1>
-        </header>
+    <div class="flex bg-gray-light">
+      <aside class="sticky top-[64px] h-[calc(100vh-64px)] w-[250px] shrink-0 flex flex-col p-4 overflow-y-auto">
+        <app-search-filters />
+      </aside>
 
-        <div class="flex flex-col md:flex-row gap-8">
-          <aside class="w-full md:w-64 shrink-0">
-            <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
-              <h2 class="font-semibold mb-4">Filters</h2>
-              <app-search-filters/>
-            </div>
-          </aside>
-
-          <main class="flex-1">
-            <div class="grid grid-cols-1 gap-6 mb-8">
-              @for (property of properties(); track property.id) {
-                <app-card-house-template [property]="property" />
-              }
-            </div>
-          </main>
-        </div>
-      </div>
+      <main class="p-4 flex-1">
+        <app-card isNotShadow>
+          <div class="grid grid-cols-1 gap-6">
+            @for (property of properties(); track property.id) {
+              <app-card-house-template [property]="property" />
+            }
+          </div>
+        </app-card>
+      </main>
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,

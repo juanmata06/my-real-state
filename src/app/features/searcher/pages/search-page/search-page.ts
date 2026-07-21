@@ -1,9 +1,11 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { CardHouseTemplate } from "@shared/components";
+import { ChangeDetectionStrategy, Component, inject, OnInit, Signal } from '@angular/core';
+import { CardHouseTemplate, SearchFiltersComponent } from '@shared/components';
+import { Property } from '@shared/models';
+import { PropertiesStore } from '@shared/store';
 
 @Component({
   selector: 'app-search-page',
-  imports: [CardHouseTemplate],
+  imports: [CardHouseTemplate, SearchFiltersComponent],
   template: `
     <div class="py-16 px-4">
       <div class="max-w-6xl mx-auto">
@@ -15,17 +17,15 @@ import { CardHouseTemplate } from "@shared/components";
           <aside class="w-full md:w-64 shrink-0">
             <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
               <h2 class="font-semibold mb-4">Filters</h2>
-              <!-- Filter content will go here -->
-              <p class="text-sm text-gray-600">Filter options coming soon...</p>
+              <app-search-filters/>
             </div>
           </aside>
 
           <main class="flex-1">
             <div class="grid grid-cols-1 gap-6 mb-8">
-              <app-card-house-template />
-              <app-card-house-template />
-              <app-card-house-template />
-              <app-card-house-template />
+              @for (property of properties(); track property.id) {
+                <app-card-house-template [property]="property" />
+              }
             </div>
           </main>
         </div>
@@ -34,4 +34,11 @@ import { CardHouseTemplate } from "@shared/components";
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export default class SearchPage {}
+export default class SearchPage implements OnInit {
+  private readonly propertiesStore: InstanceType<typeof PropertiesStore> = inject(PropertiesStore);
+  protected readonly properties: Signal<Property[]> = this.propertiesStore.properties;
+
+  ngOnInit(): void {
+    this.propertiesStore.get();
+  }
+}

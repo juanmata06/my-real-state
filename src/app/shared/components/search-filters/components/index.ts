@@ -1,0 +1,1 @@
+export * from './property-type-filter/property-type-filter.component';

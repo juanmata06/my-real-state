@@ -4,7 +4,6 @@ import { patchState, signalStore, withHooks, withMethods, withState } from '@ngr
 import { ApiDataService } from '@shared/services';
 
 type ApiDataState = {
-
   propertyTypes: string[];
   marketTypes: string[];
   propertyFeatures: string[];

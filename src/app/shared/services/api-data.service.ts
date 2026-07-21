@@ -1,6 +1,9 @@
 import { inject, Injectable } from '@angular/core';
 import { from, Observable } from 'rxjs';
+import { PostgrestSingleResponse } from '@supabase/supabase-js';
 import { SupabaseService } from './supabase.service';
+
+type EnumValuesResponse = PostgrestSingleResponse<string[]>;
 
 @Injectable({
   providedIn: 'root',
@@ -16,19 +19,19 @@ export class ApiDataService {
     );
   }
 
-  public getPropertyTypes(): Observable<any> {
+  public getPropertyTypes(): Observable<EnumValuesResponse> {
     return from(this.supabase.rpc('get_property_types'));
   }
 
-  public getMarketTypes(): Observable<any> {
+  public getMarketTypes(): Observable<EnumValuesResponse> {
     return from(this.supabase.rpc('get_market_types'));
   }
 
-  public getPropertyFeatures(): Observable<any> {
+  public getPropertyFeatures(): Observable<EnumValuesResponse> {
     return from(this.supabase.rpc('get_property_features'));
   }
 
-  public getMarketTags(): Observable<any> {
+  public getMarketTags(): Observable<EnumValuesResponse> {
     return from(this.supabase.rpc('get_market_tags'));
   }
 }

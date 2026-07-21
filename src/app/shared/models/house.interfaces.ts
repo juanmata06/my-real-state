@@ -1,4 +1,4 @@
-import { SupabaseAgent, Agent } from './agent.interfaces';
+import { Agent } from './agent.interfaces';
 
 export interface HouseInfo {
   title?: string;
@@ -9,93 +9,33 @@ export interface HouseInfo {
   isReady?: boolean;
 }
 
-// Enums
-export enum PropertyType {
-  House = 1,
-  Apartment = 2,
-  Building = 3,
-  Land = 4,
-  Commercial = 5,
-  Condo = 6,
-  Loft = 7,
-  Penthouse = 8,
-  Villa = 9
-}
-
-export enum MarketType {
-  Sale = 1,
-  Rent = 2,
-}
-
-export enum PropertyFeatures {
-  BuiltInWardrobes = 1,
-  Gym = 2,
-  Jacuzzi = 3,
-  LakeViews = 4,
-  ParkViews = 5,
-  PrivateGym = 6,
-  PrivateJacuzzi = 7,
-  PrivateSauna = 8,
-  Sauna = 9,
-  SeaViews = 10,
-  Security = 11,
-  SkylineViews = 12,
-}
-
-export enum MarketTags {
-  Featured = 1,
-  Ready = 2,
-  Luxury = 3,
-  Waterfront = 4,
-  LakeView = 5,
-  NewConstruction = 6,
-  Renovated = 7,
-  Investment = 8,
-  Foreclosure = 9,
-  ShortSale = 10,
-  OpenHouse = 11,
-  Exclusive = 12,
-  Gated = 13,
-  SmartHome = 14,
-  EnergyEfficient = 15,
-}
-
-// Supabase:
-export interface SupabasePrice {
-  amount?: number;
-  currency?: string;
-}
-
-export interface SupabaseLocation {
-  community?: string;
-  cluster?: string;
-  city?: string;
-  country?: string;
-  zip_code?: string;
-}
-
-export interface SupabaseDetails {
-  bedrooms?: number;
-  bathrooms?: number;
-  built_up_area_sqft?: number;
-  plot_area_sqft?: number;
-  vacant_on_transfer?: boolean;
-}
-
+// Supabase (flat schema — matches the properties table):
 export interface PropertyFromSupabase {
-  id?: number;
+  id?: string;
   title?: string;
   url?: string;
-  property_type?: number;
-  market_type?: number;
-  price?: SupabasePrice;
-  location?: SupabaseLocation;
-  details?: SupabaseDetails;
+  property_type?: string;
+  market_type?: string;
+  realtor_id?: string;
+  created_by?: string;
   description?: string;
-  features?: string[];
-  agent?: SupabaseAgent;
   community_description?: string;
+  price_amount?: number;
+  price_currency?: string;
+  location_community?: string;
+  location_cluster?: string;
+  location_city?: string;
+  location_country?: string;
+  location_zip_code?: string;
+  details_bedrooms?: number;
+  details_bathrooms?: number;
+  details_built_up_area_sqft?: number;
+  details_plot_area_sqft?: number;
+  details_vacant_on_transfer?: boolean;
+  features?: string[];
   market_tags?: string[];
+  created_at?: string;
+  updated_at?: string;
 }
 
 // .TS:
@@ -121,7 +61,7 @@ export interface Details {
 }
 
 export interface Property {
-  id: number;
+  id: string;
   title: string;
   url: string;
   propertyType: string;
@@ -131,7 +71,7 @@ export interface Property {
   details: Details;
   description: string;
   features: string[];
-  agent: Agent;
+  agent?: Agent;
   communityDescription: string;
   listingTags: string[];
 }

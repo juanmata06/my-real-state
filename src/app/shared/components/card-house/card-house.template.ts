@@ -1,38 +1,47 @@
-import { ChangeDetectionStrategy, Component, input, signal } from '@angular/core';
+import { CurrencyPipe } from '@angular/common';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  InputSignal,
+  WritableSignal,
+  input,
+  signal,
+} from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { faHeart, faPhone } from '@fortawesome/free-solid-svg-icons';
+import { GalleryImage, Property } from '@shared/models';
 import { CardComponent } from '../card/card.component';
 import { CustomButton } from '../custom-button/custom-button';
 import { CustomImagesGallery } from '../custom-images-gallery/custom-images-gallery';
-import { GalleryImage } from '@shared/models';
 
 @Component({
   selector: 'app-card-house-template',
-  imports: [CardComponent, CustomButton, FaIconComponent, CustomImagesGallery, RouterLink],
+  imports: [CurrencyPipe, CardComponent, CustomButton, FaIconComponent, CustomImagesGallery, RouterLink],
   template: `
-    <app-card class="cursor-pointer" routerLink="/search/1">
+    <app-card class="cursor-pointer" [routerLink]="['/search', property().id]">
       <div class="@container">
         <div class="flex flex-col @md:flex-row">
           <div class="w-full h-48 flex-shrink-0 overflow-hidden @md:w-64 @md:h-auto">
             <app-custom-images-gallery [value]="houseImages()" />
           </div>
-          <div class="flex flex-col gap-y-2 p-3">
-            <h3 class="font-bold">$450,000</h3>
+          <div class="flex flex-col gap-y-2 p-3 flex-1">
+            <h3 class="font-bold">{{ property().price.amount | currency: 'USD' : 'symbol' : '1.0-0' }}</h3>
+            <h4 class="font-medium text-lg">{{ property().title }}</h4>
             <p class="hidden @md:line-clamp-2">
-              Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quisquam dicta itaque, aut
-              nobis illum obcaecati minima expedita, repellat accusamus tempora possimus nisi. Vel
-              vitae fugit, ea nihil laboriosam reprehenderit minus!
+              {{ property().description }}
             </p>
-            <div class="flex justify-between items-end gap-3">
+            <div class="flex justify-between items-end gap-3 mt-auto">
               <div class="gap-1 flex-1">
                 <ul class="flex gap-x-3 whitespace-nowrap overflow-hidden text-ellipsis">
-                  <li>3 bds</li>
-                  <li>2 ba</li>
-                  <li>120 m²</li>
+                  <li>{{ property().details.bedrooms }} bds</li>
+                  <li>{{ property().details.bathrooms }} ba</li>
+                  <li>{{ property().details.builtUpAreaSqft }} m²</li>
                 </ul>
                 <p class="whitespace-nowrap overflow-hidden text-ellipsis">
-                  Address: 123 Main St, City
+                  Address:
+                  {{ property().location.community }}{{ property().location.cluster ? (property().location.community ? ', ' : '') + property().location.cluster : '' }}{{ property().location.city ? (property().location.community || property().location.cluster ? ', ' : '') + property().location.city : '' }}
                 </p>
               </div>
               <div class="hidden @md:flex gap-2">
@@ -53,16 +62,11 @@ import { GalleryImage } from '@shared/models';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CardHouseTemplate {
-  readonly faHeart = faHeart;
-  readonly faPhone = faPhone;
-  id = input<string>();
-  price = input<number>();
-  bedrooms = input<number>();
-  bathrooms = input<number>();
-  squareMeters = input<number>();
-  address = input<string>();
+  readonly faHeart: IconDefinition = faHeart;
+  readonly faPhone: IconDefinition = faPhone;
+  readonly property: InputSignal<Property> = input.required<Property>();
 
-  readonly houseImages = signal<GalleryImage[]>([
+  readonly houseImages: WritableSignal<GalleryImage[]> = signal<GalleryImage[]>([
     {
       itemImageSrc:
         'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600&auto=format&fit=crop',

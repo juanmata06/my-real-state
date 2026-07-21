@@ -260,7 +260,7 @@ export default class HouseDetailPage {
     photoUrl: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&q=80',
   });
 
-  readonly houseInfo = signal<Property>({
+  readonly houseInfo = signal<any>({
     id: 1,
     title: 'Jumeirah Islands Villa for Sale',
     url: 'https://realstate.com/properties/jumeirah-islands-villa-001',

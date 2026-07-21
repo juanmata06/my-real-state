@@ -1,5 +1,6 @@
 export * from './custom-header/custom-header';
 export * from './custom-button/custom-button';
+export * from './custom-chip/custom-chip.component';
 export * from './card/card.component';
 export * from './card-house/card-house.template';
 export * from './card-service/card-service.template';
@@ -13,3 +14,4 @@ export * from './login-form/login-form.component';
 export * from './register-form/register-form.component';
 export * from './nav-bar/nav-bar';
 export * from './badge-button/badge-button';
+export * from './search-filters';

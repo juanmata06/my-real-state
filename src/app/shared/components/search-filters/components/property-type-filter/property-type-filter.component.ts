@@ -7,7 +7,8 @@ import { ApiDataStore } from '@shared/store';
   selector: 'app-property-type-filter',
   imports: [CustomChipComponent],
   template: `
-    <div class="py-2">
+    app-property-type-filter
+    <!-- <div class="py-2">
       <span class="flex font-bold pb-2">Property Type</span>
       <div class="flex flex-wrap items-start gap-4">
         @for (propertyType of propertyTypes(); track propertyType.label) {
@@ -19,7 +20,7 @@ import { ApiDataStore } from '@shared/store';
           />
         }
       </div>
-    </div>
+    </div> -->
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

@@ -8,12 +8,14 @@ import { PropertiesStore } from '@shared/store';
   selector: 'app-search-page',
   imports: [CardHouseTemplate, SearchFiltersComponent, CardComponent],
   template: `
-    <div class="flex items-start bg-gray-light">
-      <aside class="sticky top-0 w-[250px] shrink-0 self-start p-4">
-        <app-search-filters />
-      </aside>
+    <div class="bg-gray-light p-4">
+      <section class="sticky top-0 z-10 bg-gray-light">
+        <div class="max-w-6xl mx-auto pb-4">
+          <app-search-filters />
+        </div>
+      </section>
 
-      <main class="p-4 flex-1">
+      <main class="max-w-6xl mx-auto">
         <app-card isNotShadow>
           <div class="grid grid-cols-1 gap-6">
             @for (property of properties(); track property.id) {

@@ -57,10 +57,10 @@ select option[disabled] {
   @apply text-gray-strong;
 }
 
-a:focus,
-input:focus,
-textarea:focus,
-select:focus,
-button:focus {
-  @apply focus:border-gray-strong;
-}
+// a:focus,
+// input:focus,
+// textarea:focus,
+// select:focus,
+// button:focus {
+//   @apply focus:border-gray-strong;
+// }

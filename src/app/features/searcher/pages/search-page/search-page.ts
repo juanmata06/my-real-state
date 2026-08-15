@@ -8,8 +8,8 @@ import { PropertiesStore } from '@shared/store';
   selector: 'app-search-page',
   imports: [CardHouseTemplate, SearchFiltersComponent, CardComponent],
   template: `
-    <div class="flex bg-gray-light">
-      <aside class="sticky top-[64px] h-[calc(100vh-64px)] w-[250px] shrink-0 flex flex-col p-4 overflow-y-auto">
+    <div class="flex items-start bg-gray-light">
+      <aside class="sticky top-0 w-[250px] shrink-0 self-start p-4">
         <app-search-filters />
       </aside>
 
